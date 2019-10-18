@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="ThemeChangerDialog" dlg:left="0" dlg:top="0" dlg:width="300" dlg:height="200" dlg:closeable="true" dlg:moveable="true" dlg:title="LibreOffice Theme Changer">
+ <dlg:bulletinboard>
+  <dlg:button dlg:id="addButton" dlg:tab-index="1" dlg:left="10" dlg:top="180" dlg:width="64" dlg:height="16" dlg:value="Import Theme" dlg:valign="center"/>
+  <dlg:button dlg:id="closeButton" dlg:tab-index="0" dlg:left="220" dlg:top="180" dlg:width="64" dlg:height="16" dlg:value="Close" dlg:valign="center" dlg:button-type="cancel"/>
+  <dlg:menulist dlg:id="themeListBox" dlg:tab-index="2" dlg:left="11" dlg:top="31" dlg:width="274" dlg:height="142"/>
+  <dlg:text dlg:id="lotcLabel" dlg:tab-index="3" dlg:left="11" dlg:top="5" dlg:width="273" dlg:height="23" dlg:value="Welcome to LibreOffice Theme Changer. Please choose theme you like than hit apply. Or you can import your own theme using Import Theme button" dlg:multiline="true"/>
+ </dlg:bulletinboard>
+</dlg:window>
