@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="ThemeChangerComplete" dlg:left="136" dlg:top="60" dlg:width="136" dlg:height="84" dlg:closeable="true" dlg:moveable="true" dlg:title="Completed - Event Name">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:border="3d"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:text dlg:style-id="0" dlg:id="Label2" dlg:tab-index="0" dlg:left="3" dlg:top="4" dlg:width="129" dlg:height="54" dlg:value="Post-progress description here" dlg:align="center" dlg:valign="center"/>
+  <dlg:button dlg:id="CommandButton1" dlg:tab-index="1" dlg:left="53" dlg:top="65" dlg:width="32" dlg:height="15" dlg:value="OK" dlg:button-type="ok"/>
+ </dlg:bulletinboard>
+</dlg:window>
