@@ -1,10 +1,10 @@
 ## LO-TC GUI
-Extension to manage LibreOffice Theme. This extension is based on [LibreOffice Theme Changer](https://github.com/raniaamina/libreoffice-theme) by Rania Amina & Sofyan Sugiyanto. Import
+Extension to manage LibreOffice Theme. This extension is based on [LibreOffice Theme Changer](https://github.com/raniaamina/libreoffice-theme) by Rania Amina & Sofyan Sugianto.
 
 ## Target
 - Start Poit
 - [x] Wireframe and concept
-- [ ] UI Develepment
+- [ ] UI Development
 
 - Manage theme for LibreOffice 6.x
 - [ ] Import Theme (we will use \*.lotc as theme format)
