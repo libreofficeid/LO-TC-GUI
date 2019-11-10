@@ -21,8 +21,14 @@
                     <value xml:lang="id">~Theme Changer</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                    <value>vnd.sun.star.script:ThemeChanger.oxt|src|Interface.py$run_dialog?language=Python&amp;location=user:uno_packages</value>
-<!--                    <value>service:id.libreoffice.themechanger.Main?execute</value>-->
+<!--                    <value>vnd.sun.star.script:ThemeChanger.oxt|src|Interface.py$run_dialog?language=Python&amp;location=user:uno_packages</value>-->
+                    <value>service:id.libreoffice.themechanger</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                    <value>_self</value>
+                </prop>
+                <prop oor:name="Context" oor:type="xs:string">
+                    <value></value>
                 </prop>
             </node>
         </node>
