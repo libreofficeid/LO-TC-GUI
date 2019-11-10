@@ -1,5 +1,22 @@
 import uno
-from MainDialog import MainDialog
+from ThemeChanger.MainDialog import MainDialog
+
+def run_dialog(*args):
+    try:
+        ctx = remote_ctx  # IDE
+        print("disini remote")
+    except:
+        ctx = uno.getComponentContext()  # UI
+        print("disini kami ndak remote")
+
+    # get desktop
+    desktop = ctx.getByName("/singletons/com.sun.star.frame.theDesktop")
+
+    # get document
+    document = desktop.getCurrentComponent()
+
+    main_dialog = MainDialog(ctx=ctx)
+    main_dialog.showDialog()
 
 if __name__ == "__main__":
     """ Connect to LibreOffice proccess.
@@ -20,17 +37,4 @@ if __name__ == "__main__":
     except Exception as err:
         print(err)
 
-    try:
-        ctx = remote_ctx  # IDE
-        print("disini remote")
-    except:
-        ctx = uno.getComponentContext()  # UI
-
-    # get desktop
-    desktop = ctx.getByName("/singletons/com.sun.star.frame.theDesktop")
-
-    # get document
-    document = desktop.getCurrentComponent()
-
-    main_dialog = MainDialog(ctx=ctx)
-    main_dialog.showDialog()
+    run_dialog()
