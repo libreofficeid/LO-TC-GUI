@@ -20,24 +20,20 @@ Tip: When edited open file in browser to check for errors.
     https://wiki.openoffice.org/wiki/Documentation/DevGuide/Scripting/Scripting_Framework
     -->
 
-    <!-- Directory with python scripts: script
-    -->
-    <manifest:file-entry manifest:media-type="application/vnd.sun.star.framework-script"
-                         manifest:full-path="src/"/>
+    <!-- Directory with python scripts: script -->
+<!--    <manifest:file-entry manifest:media-type="application/vnd.sun.star.framework-script" manifest:full-path="src/"/>-->
+    <manifest:file-entry manifest:full-path="themechanger.py" manifest:media-type="application/vnd.sun.star.uno-component;type=Python"/>
 
     <!-- Directory with dialogs files (*.xdl): gui
-    <manifest:file-entry manifest:media-type="application/vnd.sun.star.dialog-library"
-        manifest:full-path="ThemeChanger/"/>
+    <manifest:file-entry manifest:media-type="application/vnd.sun.star.dialog-library" manifest:full-path="ThemeChanger/"/>
     -->
 
     <!-- Configuration Data Files -->
-    <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
-                         manifest:full-path="Addons.xcu"/>
+    <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"  manifest:full-path="Addons.xcu"/>
 
 
     <!-- Extension name in the Extension Manager dialog -->
-    <manifest:file-entry manifest:media-type="application/vnd.sun.star.package-bundle-description"
-                         manifest:full-path="description/title.txt"/>
+    <manifest:file-entry manifest:media-type="application/vnd.sun.star.package-bundle-description"  manifest:full-path="description/title.txt"/>
 
 
 </manifest:manifest>
