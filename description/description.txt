@@ -1,0 +1,1 @@
+Extension to manage LibreOffice Theme. This extension is based on [LibreOffice Theme Changer](https://github.com/raniaamina/libreoffice-theme) by Rania Amina & Sofyan Sugianto.

@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<description xmlns="http://openoffice.org/extensions/description/2006"
+             xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <!--
+The description.xml is a means to provide additional useful information,
+such as dependencies, license and update information. The file must be
+located in the root of the extension and the name is case sensitive.
+
+Developer's Guide link:
+https://wiki.openoffice.org/wiki/Documentation/DevGuide/Extensions/description.xml
+
+Tip: When edited open file in browser to check for errors.
+    -->
+
+
+    <!--
+    Unique identifier
+
+    -->
+    <identifier value="id.libreoffice.themechanger"/>
+
+    <version value="0.1.96"/>
+
+    <platform value="all"/>
+
+    <publisher>
+        <name xlink:href="mailto:info@libreoffice.id">LibreOfficeID</name>
+    </publisher>
+
+    <display-name>
+        <name lang="en">Theme Changer</name>
+    </display-name>
+
+    <extension-description>
+        <src xlink:href="description/description.txt" lang="en"/>
+    </extension-description>
+
+</description>
