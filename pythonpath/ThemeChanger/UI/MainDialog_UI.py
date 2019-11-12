@@ -129,6 +129,9 @@ class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("lotcLabel", self.lotcLabel)
 
+        # get os env
+        self.register_new_item(self.LocalContext)
+
     # -----------------------------------------------------------
     #               Action events
     # -----------------------------------------------------------
@@ -144,7 +147,22 @@ class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         if oActionEvent.ActionCommand == 'closeButton_OnClick':
             self.closeButton_OnClick()
 
-    def register_new_item(self):
+    def register_new_item(self, ctx, filename=None):
+        from os import listdir,makedirs
+        from os.path import exists,isdir,join
+        # path substitution instance
+        ps = ctx.getServiceManager().createInstanceWithContext('com.sun.star.util.PathSubstitution', ctx)
+        # get user profile dir ($HOME/.config/libreoffice/4/user/)
+        userdir = uno.fileUrlToSystemPath(ps.getSubstituteVariableValue("$(user)"))
+        # register new dir ($(userdir)/lotc-themes) if not exist
+        if not exists(userdir+"/lotc-themes"):
+            makedirs(userdir+"/lotc-themes")
+            print("Created lotc-themes folder in userdir")
+        # TODO register new theme from filename
+            # TODO check if filename is not exist
+                # TODO read filename
+            # TODO create new component to dialog
 
+    def create_new_component(self, data):
         pass
 # ----------------- END GENERATED CODE ----------------------------------------
