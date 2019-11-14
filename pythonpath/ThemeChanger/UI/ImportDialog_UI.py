@@ -48,17 +48,17 @@ class ImportDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
 
         
         # --------- create an instance of FileControl control, set properties ---
-        self.FileControl1 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFileControlModel")
+        self.LotcLocation = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFileControlModel")
 
-        self.FileControl1.Name = "FileControl1"
-        self.FileControl1.TabIndex = 0
-        self.FileControl1.PositionX = "9"
-        self.FileControl1.PositionY = "27"
-        self.FileControl1.Width = 156
-        self.FileControl1.Height = 12
+        self.LotcLocation.Name = "LotcLocation"
+        self.LotcLocation.TabIndex = 0
+        self.LotcLocation.PositionX = "9"
+        self.LotcLocation.PositionY = "27"
+        self.LotcLocation.Width = 156
+        self.LotcLocation.Height = 12
 
         # inserts the control model into the dialog model
-        self.DialogModel.insertByName("FileControl1", self.FileControl1)
+        self.DialogModel.insertByName("LotcLocation", self.LotcLocation)
 
         # --------- create an instance of FixedText control, set properties ---
         self.Label2 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
@@ -89,54 +89,33 @@ class ImportDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.DialogModel.insertByName("Label4", self.Label4)
 
         # --------- create an instance of Button control, set properties ---
-        self.CommandButton1 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlButtonModel")
+        self.importButton = self.DialogModel.createInstance("com.sun.star.awt.UnoControlButtonModel")
 
-        self.CommandButton1.Name = "CommandButton1"
-        self.CommandButton1.TabIndex = 2
-        self.CommandButton1.PositionX = "88"
-        self.CommandButton1.PositionY = "60"
-        self.CommandButton1.Width = 59
-        self.CommandButton1.Height = 13
-        self.CommandButton1.Label = "Import"
-        self.CommandButton1.PushButtonType = 1
+        self.importButton.Name = "importButton"
+        self.importButton.TabIndex = 2
+        self.importButton.PositionX = "88"
+        self.importButton.PositionY = "60"
+        self.importButton.Width = 59
+        self.importButton.Height = 13
+        self.importButton.Label = "Import"
+        self.importButton.PushButtonType = 1
 
         # inserts the control model into the dialog model
-        self.DialogModel.insertByName("CommandButton1", self.CommandButton1)
-
-        # add the action listener
-        self.DialogContainer.getControl('CommandButton1').addActionListener(self)
-        self.DialogContainer.getControl('CommandButton1').setActionCommand('CommandButton1_OnClick')
+        self.DialogModel.insertByName("importButton", self.importButton)
 
         # --------- create an instance of Button control, set properties ---
-        self.CommandButton2 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlButtonModel")
+        self.cancelButton = self.DialogModel.createInstance("com.sun.star.awt.UnoControlButtonModel")
 
-        self.CommandButton2.Name = "CommandButton2"
-        self.CommandButton2.TabIndex = 4
-        self.CommandButton2.PositionX = "26"
-        self.CommandButton2.PositionY = "60"
-        self.CommandButton2.Width = 59
-        self.CommandButton2.Height = 13
-        self.CommandButton2.Label = "Cancel"
-        self.CommandButton2.PushButtonType = 2
+        self.cancelButton.Name = "cancelButton"
+        self.cancelButton.TabIndex = 4
+        self.cancelButton.PositionX = "26"
+        self.cancelButton.PositionY = "60"
+        self.cancelButton.Width = 59
+        self.cancelButton.Height = 13
+        self.cancelButton.Label = "Cancel"
+        self.cancelButton.PushButtonType = 2
 
         # inserts the control model into the dialog model
-        self.DialogModel.insertByName("CommandButton2", self.CommandButton2)
-
-        # add the action listener
-        self.DialogContainer.getControl('CommandButton2').addActionListener(self)
-        self.DialogContainer.getControl('CommandButton2').setActionCommand('CommandButton2_OnClick')
-
-    # -----------------------------------------------------------
-    #               Action events
-    # -----------------------------------------------------------
-
-    def actionPerformed(self, oActionEvent):
-        
-        if oActionEvent.ActionCommand == 'CommandButton1_OnClick':
-            self.CommandButton1_OnClick()
-
-        if oActionEvent.ActionCommand == 'CommandButton2_OnClick':
-            self.CommandButton2_OnClick()
-
+        self.DialogModel.insertByName("cancelButton", self.cancelButton)
 
 # ----------------- END GENERATED CODE ----------------------------------------
