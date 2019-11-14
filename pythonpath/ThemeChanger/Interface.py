@@ -4,10 +4,8 @@ from ThemeChanger.MainDialog import MainDialog
 def run_dialog(*args):
     try:
         ctx = remote_ctx  # IDE
-        print("disini remote")
     except:
         ctx = uno.getComponentContext()  # UI
-        print("disini kami ndak remote")
 
     # get desktop
     desktop = ctx.getByName("/singletons/com.sun.star.frame.theDesktop")
