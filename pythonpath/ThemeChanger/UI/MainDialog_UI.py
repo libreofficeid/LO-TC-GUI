@@ -15,9 +15,24 @@
 
 import uno
 import unohelper
-from com.sun.star.awt import XActionListener
+from com.sun.star.awt import XActionListener, XMouseListener
 from com.sun.star.task import XJobExecutor
 
+import traceback
+
+class SelectThemeListener(unohelper.Base, XMouseListener):
+    def __init__(self, cast, context):
+        self.cast = cast
+        self.context = context
+
+    def mousePressed(self, ev):
+        if ev.ClickCount == 2:
+            try:
+                self.context.themeListBox_OnClick()
+            except Exception as e:
+                print(e)
+                traceback.print_exc()
+            return
 
 class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
     """
@@ -38,8 +53,8 @@ class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.DialogContainer.setModel(self.DialogModel)
 
         self.DialogModel.Name = "ThemeChangerDialog"
-        self.DialogModel.PositionX = "0"
-        self.DialogModel.PositionY = "0"
+        self.DialogModel.PositionX = "121"
+        self.DialogModel.PositionY = "61"
         self.DialogModel.Width = 300
         self.DialogModel.Height = 200
         self.DialogModel.Closeable = True
@@ -115,6 +130,9 @@ class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("themeListBox", self.themeListBox)
 
+        # add the action listener
+        self.DialogContainer.getControl('themeListBox').addMouseListener(SelectThemeListener(self.DialogContainer,self))
+
         # --------- create an instance of FixedText control, set properties ---
         self.lotcLabel = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
 
@@ -122,9 +140,9 @@ class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.lotcLabel.TabIndex = 3
         self.lotcLabel.PositionX = "11"
         self.lotcLabel.PositionY = "5"
-        self.lotcLabel.Width = 273
-        self.lotcLabel.Height = 23
-        self.lotcLabel.Label = "Welcome to LibreOffice Theme Changer.\nPlease choose theme you like than hit apply.\nOr you can import your own theme using Import Theme button"
+        self.lotcLabel.Width = 260
+        self.lotcLabel.Height = 24
+        self.lotcLabel.Label = "Welcome to LibreOffice Theme Changer.\nPlease choose theme you like than hit apply.\nOr you can import your own theme using Import Theme button."
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("lotcLabel", self.lotcLabel)
@@ -147,22 +165,20 @@ class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         if oActionEvent.ActionCommand == 'closeButton_OnClick':
             self.closeButton_OnClick()
 
-    def register_new_item(self, ctx, filename=None):
-        from os import listdir,makedirs
-        from os.path import exists,isdir,join
-        # path substitution instance
-        ps = ctx.getServiceManager().createInstanceWithContext('com.sun.star.util.PathSubstitution', ctx)
-        # get user profile dir ($HOME/.config/libreoffice/4/user/)
-        userdir = uno.fileUrlToSystemPath(ps.getSubstituteVariableValue("$(user)"))
-        # register new dir ($(userdir)/lotc-themes) if not exist
-        if not exists(userdir+"/lotc-themes"):
-            makedirs(userdir+"/lotc-themes")
-            print("Created lotc-themes folder in userdir")
-        # TODO register new theme from filename
-            # TODO check if filename is not exist
-                # TODO read filename
-            # TODO create new component to dialog
-
-    def create_new_component(self, data):
+    def themeListBox_OnClick(self):
+        # will be override in main
         pass
+
+    def register_new_item(self, ctx, path_to_file=None):
+        # will be override on main
+        pass
+
+    def clear_theme_list(self):
+        # will be override on main
+        pass
+
+    def create_new_component(self, name, thumbnail_full_path=''):
+        # will be override on main
+        pass
+
 # ----------------- END GENERATED CODE ----------------------------------------
