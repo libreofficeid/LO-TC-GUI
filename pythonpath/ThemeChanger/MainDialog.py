@@ -9,7 +9,16 @@ from ThemeChanger.UI.MainDialog_UI import MainDialog_UI
 from ThemeChanger.ImportDialog import ImportDialog
 from ThemeChanger.CreateDialog import CreateDialog
 
+from os import listdir, makedirs
+from os.path import exists
+from shutil import copytree as copy_to_userdir, rmtree as remove_tmp
+import tempfile
+import traceback
+import zipfile
 
+def mri(ctx, target):
+    mri = ctx.ServiceManager.createInstanceWithContext("mytools.Mri", ctx)
+    mri.inspect(target)
 class MainDialog(MainDialog_UI):
     '''
     Class documentation...
@@ -19,18 +28,10 @@ class MainDialog(MainDialog_UI):
         self.ctx = ctx
         MainDialog_UI.__init__(self, self.ctx)
 
-        # for key, value in kwargs.items():
-            # if key == 'document':
-            # self.document = value
-
         # --------- my code ---------------------
 
         self.DialogModel.Title = "MainDialog"
-        # mri(self.ctx, self.DialogContainer)
-
-    def myFunction(self):
-        # TODO: not implemented
-        pass
+        # mri(self.ctx, self.DialogModel)
 
     # --------- helpers ---------------------
 
@@ -40,6 +41,68 @@ class MainDialog(MainDialog_UI):
         mBox = si.createMessageBox(self.Toolkit, MsgType, MsgButtons, MsgTitle, MsgText)
         mBox.execute()
 
+    def register_new_item(self, ctx, path_to_file=None):
+        # path substitution instance
+        ps = ctx.getServiceManager().createInstanceWithContext('com.sun.star.util.PathSubstitution', ctx)
+        # get user profile dir ($HOME/.config/libreoffice/4/user/)
+        userdir = uno.fileUrlToSystemPath(ps.getSubstituteVariableValue("$(user)"))
+        # register new dir ($(userdir)/lotc-themes) if not exist
+        if not exists(userdir + "/lotc-themes"):
+            makedirs(userdir + "/lotc-themes")
+            print("Created lotc-themes folder in userdir")
+        # register new theme from path_to_file
+        if not path_to_file == None:
+            # create tmp dir
+            TMPDIR = tempfile.gettempdir() + "/lotc/"
+            try:
+                makedirs(TMPDIR)
+            except OSError:
+                print("TMPDIR already exist, continue process...")
+
+            print("continue here ...")
+
+            # unzip to tmp dir
+            zip_ref = zipfile.ZipFile(path_to_file, 'r')
+            zip_ref.extractall(TMPDIR)
+            zip_ref.close()
+            print("%s extracted to TMPDIR, now loading ..." % path_to_file)
+
+            # check if path_to_file is not exists with imported theme
+            tmp_theme = listdir(TMPDIR)[0]
+            if not exists("%s/lotc-themes/%s" % (userdir, tmp_theme)):
+                source = TMPDIR + tmp_theme
+                destination = "%s/lotc-themes/%s" % (userdir, tmp_theme)
+                # copy tmptheme to userdir
+                try:
+                    copy_to_userdir(source, destination)
+                except Exception as e:
+                    print("exiting ... ", e)
+                print("copied")
+                # End - delete TMPDIR
+                remove_tmp(TMPDIR)
+                print("deleted tmpdir")
+            else:
+                print("Already exist")
+        # create new component to dialog
+        installed_themes = listdir(userdir + "/lotc-themes")
+        # clear first
+        self.clear_theme_list()
+        # then generate
+        for theme in installed_themes:
+            # TODO read filename description xml
+            self.create_new_component(theme)
+
+    def clear_theme_list(self):
+        print("Clearing theme lists")
+        if len(self.themeListBox.getAllItems()) > 0:
+            self.themeListBox.removeAllItems()
+
+    def create_new_component(self, name, thumbnail_full_path=''):
+        print("registering '%s' to dialog" % name)
+        if not thumbnail_full_path == '':
+            self.themeListBox.insertItem(0, name, "file://"+thumbnail_full_path)
+        else:
+            self.themeListBox.insertItem(0, name, "")
     # -----------------------------------------------------------
     #               Execute dialog
     # -----------------------------------------------------------
@@ -58,31 +121,17 @@ class MainDialog(MainDialog_UI):
 
     def importButton_OnClick(self):
         importDialog = ImportDialog(ctx=self.ctx)
-        importDialog.showDialog()
+        lotc_location=importDialog.showDialog()
+        self.register_new_item(self.ctx,lotc_location)
 
     def closeButton_OnClick(self):
         self.DialogModel.Title = "It's Alive! - closeButton"
         self.messageBox("It's Alive! - closeButton", "Event: OnClick", INFOBOX)
         # TODO: not implemented
 
-
-# def Run_MainDialog(*args):
-#
-#     try:
-#         ctx = remote_ctx                    # IDE
-#     except:
-#         ctx = uno.getComponentContext()     # UI
-#
-#     # get desktop
-#     desktop = ctx.getByName("/singletons/com.sun.star.frame.theDesktop")
-#
-#     # get document
-#     document = desktop.getCurrentComponent()
-#
-#     app = MainDialog(ctx=ctx)
-#     app.showDialog()
-#
-#
-# # Execute macro from LibreOffice UI (Tools - Macro)
-# g_exportedScripts = Run_MainDialog,
-
+    def themeListBox_OnClick(self):
+        try:
+            print(self.DialogContainer.getControl("themeListBox").getSelectedItem())
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
