@@ -15,26 +15,12 @@
 
 import uno
 import unohelper
-from com.sun.star.awt import XActionListener, XMouseListener
+from com.sun.star.awt import XActionListener, XItemListener
 from com.sun.star.task import XJobExecutor
 
 import traceback
 
-class SelectThemeListener(unohelper.Base, XMouseListener):
-    def __init__(self, cast, context):
-        self.cast = cast
-        self.context = context
-
-    def mousePressed(self, ev):
-        if ev.ClickCount == 2:
-            try:
-                self.context.themeListBox_OnClick()
-            except Exception as e:
-                print(e)
-                traceback.print_exc()
-            return
-
-class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
+class MainDialog_UI(unohelper.Base, XActionListener, XItemListener, XJobExecutor):
     """
     Class documentation...AAAAAAAAAAAAAAAAAAAAAAA
     """
@@ -131,7 +117,7 @@ class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.DialogModel.insertByName("themeListBox", self.themeListBox)
 
         # add the action listener
-        self.DialogContainer.getControl('themeListBox').addMouseListener(SelectThemeListener(self.DialogContainer,self))
+        self.DialogContainer.getControl('themeListBox').addItemListener(self)
 
         # --------- create an instance of FixedText control, set properties ---
         self.lotcLabel = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
@@ -164,6 +150,9 @@ class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
 
         if oActionEvent.ActionCommand == 'closeButton_OnClick':
             self.closeButton_OnClick()
+
+    def itemStateChanged(self, evt):
+        self.themeListBox_OnClick()
 
     def themeListBox_OnClick(self):
         # will be override in main
