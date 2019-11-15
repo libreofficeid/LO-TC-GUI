@@ -8,9 +8,10 @@ from com.sun.star.awt.MessageBoxType import MESSAGEBOX, INFOBOX, WARNINGBOX, ERR
 from ThemeChanger.UI.MainDialog_UI import MainDialog_UI
 from ThemeChanger.ImportDialog import ImportDialog
 from ThemeChanger.CreateDialog import CreateDialog
+from ThemeChanger.DetailsDialog import DetailsDialog
 
 from os import listdir, makedirs
-from os.path import exists
+from os.path import exists, isfile
 from shutil import copytree as copy_to_userdir, rmtree as remove_tmp
 import tempfile
 import traceback
@@ -52,6 +53,10 @@ class MainDialog(MainDialog_UI):
             print("Created lotc-themes folder in userdir")
         # register new theme from path_to_file
         if not path_to_file == None:
+            # check if path_to_file is exists and it is a file
+            if not exists(path_to_file) or not isfile(path_to_file):
+                self.messageBox("Oops, %s is missing, please check your lotc file path" % path_to_file, "Error opening file")
+                return
             # create tmp dir
             TMPDIR = tempfile.gettempdir() + "/lotc/"
             try:
@@ -121,17 +126,20 @@ class MainDialog(MainDialog_UI):
 
     def importButton_OnClick(self):
         importDialog = ImportDialog(ctx=self.ctx)
-        lotc_location=importDialog.showDialog()
-        self.register_new_item(self.ctx,lotc_location)
+        lotc_location = importDialog.showDialog()
+        if not lotc_location == None:
+            self.register_new_item(self.ctx,lotc_location)
 
     def closeButton_OnClick(self):
         self.DialogModel.Title = "It's Alive! - closeButton"
         self.messageBox("It's Alive! - closeButton", "Event: OnClick", INFOBOX)
         # TODO: not implemented
 
+    def showDetailDialog(self, theme_name):
+        theme_data = {"name" : theme_name}
+        detailDialog = DetailsDialog(ctx=self.ctx, theme_data=theme_data)
+        detailDialog.showDialog()
+
     def themeListBox_OnClick(self):
-        try:
-            print(self.DialogContainer.getControl("themeListBox").getSelectedItem())
-        except Exception as e:
-            print(e)
-            traceback.print_exc()
+        print("Theme selected: ", self.DialogContainer.getControl("themeListBox").getSelectedItem())
+        self.showDetailDialog(self.DialogContainer.getControl("themeListBox").getSelectedItem())
