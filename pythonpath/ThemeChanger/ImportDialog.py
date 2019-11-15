@@ -43,15 +43,20 @@ class ImportDialog(ImportDialog_UI):
     # -----------------------------------------------------------
     def get_lotc_location(self):
         lotc_location = self.DialogContainer.getControl("LotcLocation").getText()
-        if lotc_location == "" or lotc_location == None:
+        extension = lotc_location[-5:].lower()
+        if extension != ".lotc" or lotc_location == "" or lotc_location == None:
             lotc_location = None
         return lotc_location
 
     def showDialog(self):
         self.DialogContainer.setVisible(True)
         self.DialogContainer.createPeer(self.Toolkit, None)
-        # self.DialogContainer.execute()
         if self.DialogContainer.execute() == 1:
-            return self.get_lotc_location()
+            theme_location = self.get_lotc_location()
+            if not theme_location == None:
+                return theme_location
+            else:
+                self.messageBox("Oops, your selected theme is not lotc file","Error")
+                return None
         else:
             return None
