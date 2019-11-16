@@ -15,11 +15,12 @@
 
 import uno
 import unohelper
-from com.sun.star.awt import XActionListener
+from com.sun.star.awt import XActionListener, XItemListener
 from com.sun.star.task import XJobExecutor
 
+import traceback
 
-class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
+class MainDialog_UI(unohelper.Base, XActionListener, XItemListener, XJobExecutor):
     """
     Class documentation...AAAAAAAAAAAAAAAAAAAAAAA
     """
@@ -38,8 +39,8 @@ class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.DialogContainer.setModel(self.DialogModel)
 
         self.DialogModel.Name = "ThemeChangerDialog"
-        self.DialogModel.PositionX = "0"
-        self.DialogModel.PositionY = "0"
+        self.DialogModel.PositionX = "121"
+        self.DialogModel.PositionY = "61"
         self.DialogModel.Width = 300
         self.DialogModel.Height = 200
         self.DialogModel.Closeable = True
@@ -115,6 +116,9 @@ class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("themeListBox", self.themeListBox)
 
+        # add the action listener
+        self.DialogContainer.getControl('themeListBox').addItemListener(self)
+
         # --------- create an instance of FixedText control, set properties ---
         self.lotcLabel = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
 
@@ -122,12 +126,15 @@ class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.lotcLabel.TabIndex = 3
         self.lotcLabel.PositionX = "11"
         self.lotcLabel.PositionY = "5"
-        self.lotcLabel.Width = 273
-        self.lotcLabel.Height = 23
-        self.lotcLabel.Label = "Welcome to LibreOffice Theme Changer.\nPlease choose theme you like than hit apply.\nOr you can import your own theme using Import Theme button"
+        self.lotcLabel.Width = 260
+        self.lotcLabel.Height = 24
+        self.lotcLabel.Label = "Welcome to LibreOffice Theme Changer.\nPlease choose theme you like than hit apply.\nOr you can import your own theme using Import Theme button."
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("lotcLabel", self.lotcLabel)
+
+        # get os env
+        self.register_new_item(self.LocalContext)
 
     # -----------------------------------------------------------
     #               Action events
@@ -144,7 +151,23 @@ class MainDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         if oActionEvent.ActionCommand == 'closeButton_OnClick':
             self.closeButton_OnClick()
 
-    def register_new_item(self):
+    def itemStateChanged(self, evt):
+        self.themeListBox_OnClick()
 
+    def themeListBox_OnClick(self):
+        # will be override in main
         pass
+
+    def register_new_item(self, ctx, path_to_file=None):
+        # will be override on main
+        pass
+
+    def clear_theme_list(self):
+        # will be override on main
+        pass
+
+    def create_new_component(self, name, thumbnail_full_path=''):
+        # will be override on main
+        pass
+
 # ----------------- END GENERATED CODE ----------------------------------------

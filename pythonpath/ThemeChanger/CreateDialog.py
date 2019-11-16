@@ -7,29 +7,17 @@ from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_OK, DEFAULT_BUTTON
 from com.sun.star.awt.MessageBoxType import MESSAGEBOX, INFOBOX, WARNINGBOX, ERRORBOX, QUERYBOX
 from ThemeChanger.UI.CreateDialog_UI import CreateDialog_UI
 
+from os import makedirs
+from os.path import exists
 
 # -------------------------------------
 # HELPERS FOR MRI AND  XRAY
 # -------------------------------------
 
 # Uncomment for MRI
-# def mri(ctx, target):
-#     mri = ctx.ServiceManager.createInstanceWithContext("mytools.Mri", ctx)
-#     mri.inspect(target)
-
-# Uncomment for Xray
-# def xray(myObject):
-#     try:
-#         sm = uno.getComponentContext().ServiceManager
-#         mspf = sm.createInstanceWithContext("com.sun.star.script.provider.MasterScriptProviderFactory", uno.getComponentContext())
-#         scriptPro = mspf.createScriptProvider("")
-#         xScript = scriptPro.getScript("vnd.sun.star.script:XrayTool._Main.Xray?language=Basic&location=application")
-#         xScript.invoke((myObject,), (), ())
-#         return
-#     except:
-#         raise _rtex("\nBasic library Xray is not installed", uno.getComponentContext())
-# -------------------------------------------------------------------
-
+def mri(ctx, target):
+    mri = ctx.ServiceManager.createInstanceWithContext("mytools.Mri", ctx)
+    mri.inspect(target)
 
 class CreateDialog(CreateDialog_UI):
     '''
@@ -40,17 +28,43 @@ class CreateDialog(CreateDialog_UI):
         self.ctx = ctx
         CreateDialog_UI.__init__(self, self.ctx)
 
-        # for key, value in kwargs.items():
-            # if key == 'document':
-            # self.document = value
-
         # --------- my code ---------------------
 
         self.DialogModel.Title = "CreateDialog"
-        # mri(self.ctx, self.DialogContainer)
+        # mri(self.ctx, self.DialogModel)
 
-    def myFunction(self):
-        # TODO: not implemented
+    def get_theme_name(self):
+        return self.DialogContainer.getControl("ThemeNameField").Text
+
+    def get_new_theme_location(self):
+        return self.DialogContainer.getControl("NewThemeFolderField").Text
+
+    def get_author_name(self):
+        return self.DialogContainer.getControl("AuthorNameField").Text
+
+    def write_content(self, content_type="xml", save_to="", data={}):
+        # xml
+        if content_type == "xml":
+            import xml.etree.cElementTree as Et
+            root = Et.Element("lotc_theme")
+            Et.SubElement(root, "name").text = data["name"]
+            Et.SubElement(root, "version").text = data["version"]
+            Et.SubElement(root, "author").text = data["author"]
+            Et.SubElement(root, "description").text = "this is my libreoffice theme description"
+            # write to file
+            tree = Et.ElementTree(root)
+            tree.write(save_to,encoding="UTF-8",xml_declaration=True,method="xml")
+
+    def create_new_theme(self, theme_name, author_name, new_location_path):
+        # make requiered directories
+        makedirs(new_location_path+"/program")
+        makedirs(new_location_path + "/share/gallery/personas/" + theme_name)
+        # write sample manifest to theme path
+        theme_manifest_path = new_location_path + "/manifest.xml"
+        theme_manifest_data = {"name": theme_name, "author": author_name, "version": "1.0"}
+        self.write_content(content_type="xml", save_to=theme_manifest_path, data=theme_manifest_data)
+
+        return self.messageBox("Success creating theme in: %s\n You can zip it and change the extension into lotc" % new_location_path,"Success!")
         pass
 
     # --------- helpers ---------------------
@@ -61,6 +75,18 @@ class CreateDialog(CreateDialog_UI):
         mBox = si.createMessageBox(self.Toolkit, MsgType, MsgButtons, MsgTitle, MsgText)
         mBox.execute()
 
+    def pick_folder(self):
+        try:
+            sm = self.ctx.ServiceManager
+            filepicker = sm.createInstanceWithContext("com.sun.star.ui.dialogs.FolderPicker", self.ctx)
+            filepicker.setTitle("Select folder to save theme")
+            if filepicker.execute():
+                self.DialogContainer.getControl("NewThemeFolderField").Text = filepicker.getDirectory()[7:]
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+
+
     # -----------------------------------------------------------
     #               Execute dialog
     # -----------------------------------------------------------
@@ -68,69 +94,38 @@ class CreateDialog(CreateDialog_UI):
     def showDialog(self):
         self.DialogContainer.setVisible(True)
         self.DialogContainer.createPeer(self.Toolkit, None)
-        self.DialogContainer.execute()
+        if self.DialogContainer.execute() == 1:
+            theme_name = self.get_theme_name()
+            new_location_path = self.get_new_theme_location() + "/" + theme_name
+            author_name = self.get_author_name()
+            if theme_name == "" or author_name == "" or new_location_path == "":
+                self.messageBox("Please fill all fields","Empty Field")
+                self.showDialog()
+                return
+            else:
+                if not exists(new_location_path):
+                    try:
+                        makedirs(new_location_path)
+                    except OSError as e:
+                        import traceback
+                        print(e)
+                        self.messageBox("Unable to create destination path %s.\n%s" % (new_location_path, traceback.print_exc()),"Error")
+                        self.showDialog()
+
+                return self.create_new_theme(theme_name, author_name, new_location_path)
+        else:
+            return None
 
     # -----------------------------------------------------------
     #               Action events
     # -----------------------------------------------------------
 
-    def CommandButton1_OnClick(self):
-        self.DialogModel.Title = "It's Alive! - CommandButton1"
-        self.messageBox("It's Alive! - CommandButton1", "Event: OnClick", INFOBOX)
-        # TODO: not implemented
-
-    def CommandButton2_OnClick(self):
-        self.DialogModel.Title = "It's Alive! - CommandButton2"
-        self.messageBox("It's Alive! - CommandButton2", "Event: OnClick", INFOBOX)
-        # TODO: not implemented
-
-
-# def Run_CreateDialog(*args):
-#
-#     try:
-#         ctx = remote_ctx                    # IDE
-#     except:
-#         ctx = uno.getComponentContext()     # UI
-#
-#     # get desktop
-#     desktop = ctx.getByName("/singletons/com.sun.star.frame.theDesktop")
-#
-#     # get document
-#     document = desktop.getCurrentComponent()
-#
-#     app = CreateDialog(ctx=ctx)
-#     app.showDialog()
-#
-#
-# # Execute macro from LibreOffice UI (Tools - Macro)
-# g_exportedScripts = Run_CreateDialog,
-#
-#
-# # -------------------------------------
-# # HELPER FOR AN IDE
-# # -------------------------------------
-#
-# if __name__ == "__main__":
-#     """ Connect to LibreOffice proccess.
-#     1) Start the office in shell with command:
-#     soffice "--accept=socket,host=127.0.0.1,port=2002,tcpNoDelay=1;urp;StarOffice.ComponentContext" --norestore
-#     2) Run script
-#     """
-#     import os
-#     import sys
-#
-#     sys.path.append(os.path.join(os.path.dirname(__file__), 'pythonpath'))
-#
-#     local_ctx = uno.getComponentContext()
-#     resolver = local_ctx.ServiceManager.createInstance("com.sun.star.bridge.UnoUrlResolver")
-#     try:
-#         remote_ctx = resolver.resolve("uno:socket,"
-#                                         "host=127.0.0.1,"
-#                                         "port=2002,"
-#                                         "tcpNoDelay=1;"
-#                                         "urp;"
-#                                         "StarOffice.ComponentContext")
-#     except Exception as err:
-#         print(err)
-#
-#     Run_CreateDialog()
+    # def CommandButton1_OnClick(self):
+    #     self.DialogModel.Title = "It's Alive! - CommandButton1"
+    #     self.messageBox("It's Alive! - CommandButton1", "Event: OnClick", INFOBOX)
+    #     # TODO: not implemented
+    #
+    # def CommandButton2_OnClick(self):
+    #     self.DialogModel.Title = "It's Alive! - CommandButton2"
+    #     self.messageBox("It's Alive! - CommandButton2", "Event: OnClick", INFOBOX)
+    #     # TODO: not implemented

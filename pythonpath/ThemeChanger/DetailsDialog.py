@@ -13,45 +13,23 @@ from ThemeChanger.UI.DetailsDialog_UI import DetailsDialog_UI
 # -------------------------------------
 
 # Uncomment for MRI
-# def mri(ctx, target):
-#     mri = ctx.ServiceManager.createInstanceWithContext("mytools.Mri", ctx)
-#     mri.inspect(target)
-
-# Uncomment for Xray
-# def xray(myObject):
-#     try:
-#         sm = uno.getComponentContext().ServiceManager
-#         mspf = sm.createInstanceWithContext("com.sun.star.script.provider.MasterScriptProviderFactory", uno.getComponentContext())
-#         scriptPro = mspf.createScriptProvider("")
-#         xScript = scriptPro.getScript("vnd.sun.star.script:XrayTool._Main.Xray?language=Basic&location=application")
-#         xScript.invoke((myObject,), (), ())
-#         return
-#     except:
-#         raise _rtex("\nBasic library Xray is not installed", uno.getComponentContext())
-# -------------------------------------------------------------------
-
+def mri(ctx, target):
+    mri = ctx.ServiceManager.createInstanceWithContext("mytools.Mri", ctx)
+    mri.inspect(target)
 
 class DetailsDialog(DetailsDialog_UI):
     '''
     Class documentation...
     '''
-    def __init__(self, ctx=uno.getComponentContext(), **kwargs):
-
+    def __init__(self, ctx=uno.getComponentContext(), theme_data={}, **kwargs):
+        self.theme_data = theme_data
         self.ctx = ctx
-        DetailsDialog_UI.__init__(self, self.ctx)
-
-        # for key, value in kwargs.items():
-            # if key == 'document':
-            # self.document = value
+        DetailsDialog_UI.__init__(self, self.ctx, self.theme_data)
 
         # --------- my code ---------------------
 
-        self.DialogModel.Title = "DetailsDialog"
+        # self.DialogModel.Title = "DetailsDialog"
         # mri(self.ctx, self.DialogContainer)
-
-    def myFunction(self):
-        # TODO: not implemented
-        pass
 
     # --------- helpers ---------------------
 
@@ -74,63 +52,12 @@ class DetailsDialog(DetailsDialog_UI):
     #               Action events
     # -----------------------------------------------------------
 
-    def CommandButton1_OnClick(self):
-        self.DialogModel.Title = "It's Alive! - CommandButton1"
-        self.messageBox("It's Alive! - CommandButton1", "Event: OnClick", INFOBOX)
+    def RemoveButton_OnClick(self):
+        self.DialogModel.Title = "It's Alive! - RemoveButton"
+        self.messageBox("It's Alive! - RemoveButton", "Event: OnClick", INFOBOX)
         # TODO: not implemented
 
-    def CommandButton2_OnClick(self):
-        self.DialogModel.Title = "It's Alive! - CommandButton2"
-        self.messageBox("It's Alive! - CommandButton2", "Event: OnClick", INFOBOX)
+    def InstallButton_OnClick(self):
+        self.DialogModel.Title = "It's Alive! - InstallButton"
+        self.messageBox("It's Alive! - InstallButton", "Event: OnClick", INFOBOX)
         # TODO: not implemented
-
-
-# def Run_DetailsDialog(*args):
-#
-#     try:
-#         ctx = remote_ctx                    # IDE
-#     except:
-#         ctx = uno.getComponentContext()     # UI
-#
-#     # get desktop
-#     desktop = ctx.getByName("/singletons/com.sun.star.frame.theDesktop")
-#
-#     # get document
-#     document = desktop.getCurrentComponent()
-#
-#     app = DetailsDialog(ctx=ctx)
-#     app.showDialog()
-#
-#
-# # Execute macro from LibreOffice UI (Tools - Macro)
-# g_exportedScripts = Run_DetailsDialog,
-#
-#
-# # -------------------------------------
-# # HELPER FOR AN IDE
-# # -------------------------------------
-#
-# if __name__ == "__main__":
-#     """ Connect to LibreOffice proccess.
-#     1) Start the office in shell with command:
-#     soffice "--accept=socket,host=127.0.0.1,port=2002,tcpNoDelay=1;urp;StarOffice.ComponentContext" --norestore
-#     2) Run script
-#     """
-#     import os
-#     import sys
-#
-#     sys.path.append(os.path.join(os.path.dirname(__file__), 'pythonpath'))
-#
-#     local_ctx = uno.getComponentContext()
-#     resolver = local_ctx.ServiceManager.createInstance("com.sun.star.bridge.UnoUrlResolver")
-#     try:
-#         remote_ctx = resolver.resolve("uno:socket,"
-#                                         "host=127.0.0.1,"
-#                                         "port=2002,"
-#                                         "tcpNoDelay=1;"
-#                                         "urp;"
-#                                         "StarOffice.ComponentContext")
-#     except Exception as err:
-#         print(err)
-#
-#     Run_DetailsDialog()

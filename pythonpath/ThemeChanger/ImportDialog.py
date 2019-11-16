@@ -13,45 +13,22 @@ from ThemeChanger.UI.ImportDialog_UI import ImportDialog_UI
 # -------------------------------------
 
 # Uncomment for MRI
-# def mri(ctx, target):
-#     mri = ctx.ServiceManager.createInstanceWithContext("mytools.Mri", ctx)
-#     mri.inspect(target)
-
-# Uncomment for Xray
-# def xray(myObject):
-#     try:
-#         sm = uno.getComponentContext().ServiceManager
-#         mspf = sm.createInstanceWithContext("com.sun.star.script.provider.MasterScriptProviderFactory", uno.getComponentContext())
-#         scriptPro = mspf.createScriptProvider("")
-#         xScript = scriptPro.getScript("vnd.sun.star.script:XrayTool._Main.Xray?language=Basic&location=application")
-#         xScript.invoke((myObject,), (), ())
-#         return
-#     except:
-#         raise _rtex("\nBasic library Xray is not installed", uno.getComponentContext())
-# -------------------------------------------------------------------
-
+def mri(ctx, target):
+    mri = ctx.ServiceManager.createInstanceWithContext("mytools.Mri", ctx)
+    mri.inspect(target)
 
 class ImportDialog(ImportDialog_UI):
     '''
     Class documentation...
     '''
     def __init__(self, ctx=uno.getComponentContext(), **kwargs):
-
         self.ctx = ctx
         ImportDialog_UI.__init__(self, self.ctx)
-
-        # for key, value in kwargs.items():
-            # if key == 'document':
-            # self.document = value
 
         # --------- my code ---------------------
 
         self.DialogModel.Title = "ImportDialog"
         # mri(self.ctx, self.DialogContainer)
-
-    def myFunction(self):
-        # TODO: not implemented
-        pass
 
     # --------- helpers ---------------------
 
@@ -65,72 +42,36 @@ class ImportDialog(ImportDialog_UI):
     #               Execute dialog
     # -----------------------------------------------------------
 
+    def pick_lotc(self):
+        try:
+            sm = self.ctx.ServiceManager
+            filepicker = sm.createInstanceWithContext("com.sun.star.ui.dialogs.FilePicker", self.ctx)
+            filepicker.setMultiSelectionMode(False)
+            filepicker.appendFilter("LibreOffice Theme (*.lotc)","*.lotc")
+            filepicker.setTitle("Select lotc file")
+            if filepicker.execute():
+                print(filepicker.getFiles())
+                self.DialogContainer.getControl("LotcLocation").Text = filepicker.getFiles()[0][7:]
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+
+    def get_lotc_location(self):
+        lotc_location = self.DialogContainer.getControl("LotcLocation").getText()
+        extension = lotc_location[-5:].lower()
+        if extension != ".lotc" or lotc_location == "" or lotc_location == None:
+            lotc_location = None
+        return lotc_location
+
     def showDialog(self):
         self.DialogContainer.setVisible(True)
         self.DialogContainer.createPeer(self.Toolkit, None)
-        self.DialogContainer.execute()
-
-    # -----------------------------------------------------------
-    #               Action events
-    # -----------------------------------------------------------
-
-    def CommandButton1_OnClick(self):
-        self.DialogModel.Title = "It's Alive! - CommandButton1"
-        self.messageBox("It's Alive! - CommandButton1", "Event: OnClick", INFOBOX)
-        # TODO: not implemented
-
-    def CommandButton2_OnClick(self):
-        self.DialogModel.Title = "It's Alive! - CommandButton2"
-        self.messageBox("It's Alive! - CommandButton2", "Event: OnClick", INFOBOX)
-        # TODO: not implemented
-
-
-# def Run_ImportDialog(*args):
-#
-#     try:
-#         ctx = remote_ctx                    # IDE
-#     except:
-#         ctx = uno.getComponentContext()     # UI
-#
-#     # get desktop
-#     desktop = ctx.getByName("/singletons/com.sun.star.frame.theDesktop")
-#
-#     # get document
-#     document = desktop.getCurrentComponent()
-#
-#     app = ImportDialog(ctx=ctx)
-#     app.showDialog()
-#
-#
-# # Execute macro from LibreOffice UI (Tools - Macro)
-# g_exportedScripts = Run_ImportDialog,
-#
-#
-# # -------------------------------------
-# # HELPER FOR AN IDE
-# # -------------------------------------
-#
-# if __name__ == "__main__":
-#     """ Connect to LibreOffice proccess.
-#     1) Start the office in shell with command:
-#     soffice "--accept=socket,host=127.0.0.1,port=2002,tcpNoDelay=1;urp;StarOffice.ComponentContext" --norestore
-#     2) Run script
-#     """
-#     import os
-#     import sys
-#
-#     sys.path.append(os.path.join(os.path.dirname(__file__), 'pythonpath'))
-#
-#     local_ctx = uno.getComponentContext()
-#     resolver = local_ctx.ServiceManager.createInstance("com.sun.star.bridge.UnoUrlResolver")
-#     try:
-#         remote_ctx = resolver.resolve("uno:socket,"
-#                                         "host=127.0.0.1,"
-#                                         "port=2002,"
-#                                         "tcpNoDelay=1;"
-#                                         "urp;"
-#                                         "StarOffice.ComponentContext")
-#     except Exception as err:
-#         print(err)
-#
-#     Run_ImportDialog()
+        if self.DialogContainer.execute() == 1:
+            theme_location = self.get_lotc_location()
+            if not theme_location == None:
+                return theme_location
+            else:
+                self.messageBox("Oops, your selected theme is not lotc file","Error")
+                return None
+        else:
+            return None
