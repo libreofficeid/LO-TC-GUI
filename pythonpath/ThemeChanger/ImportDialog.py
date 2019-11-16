@@ -41,6 +41,21 @@ class ImportDialog(ImportDialog_UI):
     # -----------------------------------------------------------
     #               Execute dialog
     # -----------------------------------------------------------
+
+    def pick_lotc(self):
+        try:
+            sm = self.ctx.ServiceManager
+            filepicker = sm.createInstanceWithContext("com.sun.star.ui.dialogs.FilePicker", self.ctx)
+            filepicker.setMultiSelectionMode(False)
+            filepicker.appendFilter("LibreOffice Theme (*.lotc)","*.lotc")
+            filepicker.setTitle("Select lotc file")
+            if filepicker.execute():
+                print(filepicker.getFiles())
+                self.DialogContainer.getControl("LotcLocation").Text = filepicker.getFiles()[0][7:]
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+
     def get_lotc_location(self):
         lotc_location = self.DialogContainer.getControl("LotcLocation").getText()
         extension = lotc_location[-5:].lower()

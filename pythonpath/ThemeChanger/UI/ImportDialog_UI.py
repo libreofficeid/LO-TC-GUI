@@ -15,11 +15,11 @@
 
 import uno
 import unohelper
-from com.sun.star.awt import XActionListener
+from com.sun.star.awt import XActionListener, XKeyListener, XMouseListener
 from com.sun.star.task import XJobExecutor
 
 
-class ImportDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
+class ImportDialog_UI(unohelper.Base, XActionListener, XKeyListener, XMouseListener, XJobExecutor):
     """
     Class documentation...AAAAAAAAAAAAAAAAAAAAAAA
     """
@@ -38,8 +38,8 @@ class ImportDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.DialogContainer.setModel(self.DialogModel)
 
         self.DialogModel.Name = "ThemeChangerImport"
-        self.DialogModel.PositionX = "136"
-        self.DialogModel.PositionY = "65"
+        self.DialogModel.PositionX = "50"
+        self.DialogModel.PositionY = "50"
         self.DialogModel.Width = 175
         self.DialogModel.Height = 83
         self.DialogModel.Closeable = True
@@ -48,7 +48,7 @@ class ImportDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
 
         
         # --------- create an instance of FileControl control, set properties ---
-        self.LotcLocation = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFileControlModel")
+        self.LotcLocation = self.DialogModel.createInstance("com.sun.star.awt.UnoControlEditModel")
 
         self.LotcLocation.Name = "LotcLocation"
         self.LotcLocation.TabIndex = 0
@@ -59,6 +59,8 @@ class ImportDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("LotcLocation", self.LotcLocation)
+        self.DialogContainer.getControl("LotcLocation").addMouseListener(self)
+        self.DialogContainer.getControl("LotcLocation").addKeyListener(self)
 
         # --------- create an instance of FixedText control, set properties ---
         self.Label2 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
@@ -117,5 +119,11 @@ class ImportDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("cancelButton", self.cancelButton)
+
+    def mousePressed(self, evt):
+        self.pick_lotc()
+
+    def keyPressed(self, evt):
+        self.pick_lotc()
 
 # ----------------- END GENERATED CODE ----------------------------------------
