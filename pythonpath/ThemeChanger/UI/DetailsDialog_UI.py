@@ -44,8 +44,8 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.DialogContainer.setModel(self.DialogModel)
 
         self.DialogModel.Name = "ThemeChangerDetails"
-        # self.DialogModel.PositionX = "0"
-        # self.DialogModel.PositionY = "0"
+        self.DialogModel.PositionX = "10"
+        self.DialogModel.PositionY = "10"
         self.DialogModel.Width = 250
         self.DialogModel.Height = 180
         self.DialogModel.Closeable = True
