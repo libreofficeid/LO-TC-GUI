@@ -15,11 +15,11 @@
 
 import uno
 import unohelper
-from com.sun.star.awt import XActionListener
+from com.sun.star.awt import XActionListener, XMouseListener, XKeyListener
 from com.sun.star.task import XJobExecutor
 
 
-class CreateDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
+class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListener, XJobExecutor):
     """
     Class documentation...AAAAAAAAAAAAAAAAAAAAAAA
     """
@@ -38,8 +38,8 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.DialogContainer.setModel(self.DialogModel)
 
         self.DialogModel.Name = "ThemeChangerCreate"
-        self.DialogModel.PositionX = "136"
-        self.DialogModel.PositionY = "59"
+        self.DialogModel.PositionX = "50"
+        self.DialogModel.PositionY = "30"
         self.DialogModel.Width = 175
         self.DialogModel.Height = 152
         self.DialogModel.Closeable = True
@@ -65,7 +65,7 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.Label2 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
 
         self.Label2.Name = "Label2"
-        self.Label2.TabIndex = 4
+        self.Label2.TabIndex = 10
         self.Label2.PositionX = "10"
         self.Label2.PositionY = "90"
         self.Label2.Width = 43
@@ -132,81 +132,84 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.DialogModel.insertByName("Label6", self.Label6)
 
         # --------- create an instance of FileControl control, set properties ---
-        self.FileControl1 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFileControlModel")
+        # self.NewThemeFolderField = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFileControlModel")
+        self.NewThemeFolderField = self.DialogModel.createInstance("com.sun.star.awt.UnoControlEditModel")
 
-        self.FileControl1.Name = "FileControl1"
-        self.FileControl1.TabIndex = 2
-        self.FileControl1.PositionX = "10"
-        self.FileControl1.PositionY = "100"
-        self.FileControl1.Width = 156
-        self.FileControl1.Height = 12
+        self.NewThemeFolderField.Name = "NewThemeFolderField"
+        self.NewThemeFolderField.TabIndex = 4
+        self.NewThemeFolderField.PositionX = "10"
+        self.NewThemeFolderField.PositionY = "100"
+        self.NewThemeFolderField.Width = 156
+        self.NewThemeFolderField.Height = 12
 
         # inserts the control model into the dialog model
-        self.DialogModel.insertByName("FileControl1", self.FileControl1)
+        self.DialogModel.insertByName("NewThemeFolderField", self.NewThemeFolderField)
+        self.DialogContainer.getControl("NewThemeFolderField").addMouseListener(self)
+        self.DialogContainer.getControl("NewThemeFolderField").addKeyListener(self)
 
         # --------- create an instance of Edit control, set properties ---
-        self.TextField1 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlEditModel")
+        self.ThemeNameField = self.DialogModel.createInstance("com.sun.star.awt.UnoControlEditModel")
 
-        self.TextField1.Name = "TextField1"
-        self.TextField1.TabIndex = 3
-        self.TextField1.PositionX = "10"
-        self.TextField1.PositionY = "64"
-        self.TextField1.Width = 155
-        self.TextField1.Height = 12
+        self.ThemeNameField.Name = "ThemeNameField"
+        self.ThemeNameField.TabIndex = 3
+        self.ThemeNameField.PositionX = "10"
+        self.ThemeNameField.PositionY = "64"
+        self.ThemeNameField.Width = 155
+        self.ThemeNameField.Height = 12
 
         # inserts the control model into the dialog model
-        self.DialogModel.insertByName("TextField1", self.TextField1)
+        self.DialogModel.insertByName("ThemeNameField", self.ThemeNameField)
 
         # --------- create an instance of Edit control, set properties ---
-        self.TextField2 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlEditModel")
+        self.AuthorNameField = self.DialogModel.createInstance("com.sun.star.awt.UnoControlEditModel")
 
-        self.TextField2.Name = "TextField2"
-        self.TextField2.TabIndex = 10
-        self.TextField2.PositionX = "10"
-        self.TextField2.PositionY = "26"
-        self.TextField2.Width = 155
-        self.TextField2.Height = 12
+        self.AuthorNameField.Name = "AuthorNameField"
+        self.AuthorNameField.TabIndex = 2
+        self.AuthorNameField.PositionX = "10"
+        self.AuthorNameField.PositionY = "26"
+        self.AuthorNameField.Width = 155
+        self.AuthorNameField.Height = 12
 
         # inserts the control model into the dialog model
-        self.DialogModel.insertByName("TextField2", self.TextField2)
+        self.DialogModel.insertByName("AuthorNameField", self.AuthorNameField)
 
         # --------- create an instance of Button control, set properties ---
-        self.CommandButton1 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlButtonModel")
+        self.CreateButton = self.DialogModel.createInstance("com.sun.star.awt.UnoControlButtonModel")
 
-        self.CommandButton1.Name = "CommandButton1"
-        self.CommandButton1.TabIndex = 6
-        self.CommandButton1.PositionX = "85"
-        self.CommandButton1.PositionY = "134"
-        self.CommandButton1.Width = 59
-        self.CommandButton1.Height = 13
-        self.CommandButton1.Label = "Create"
-        self.CommandButton1.PushButtonType = 1
+        self.CreateButton.Name = "CreateButton"
+        self.CreateButton.TabIndex = 6
+        self.CreateButton.PositionX = "85"
+        self.CreateButton.PositionY = "134"
+        self.CreateButton.Width = 59
+        self.CreateButton.Height = 13
+        self.CreateButton.Label = "Create"
+        self.CreateButton.PushButtonType = 1
 
         # inserts the control model into the dialog model
-        self.DialogModel.insertByName("CommandButton1", self.CommandButton1)
+        self.DialogModel.insertByName("CreateButton", self.CreateButton)
 
-        # add the action listener
-        self.DialogContainer.getControl('CommandButton1').addActionListener(self)
-        self.DialogContainer.getControl('CommandButton1').setActionCommand('CommandButton1_OnClick')
+        # # add the action listener
+        # self.DialogContainer.getControl('CreateButton').addActionListener(self)
+        # self.DialogContainer.getControl('CreateButton').setActionCommand('CreateButton_OnClick')
 
         # --------- create an instance of Button control, set properties ---
-        self.CommandButton2 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlButtonModel")
+        self.CancelButton = self.DialogModel.createInstance("com.sun.star.awt.UnoControlButtonModel")
 
-        self.CommandButton2.Name = "CommandButton2"
-        self.CommandButton2.TabIndex = 8
-        self.CommandButton2.PositionX = "23"
-        self.CommandButton2.PositionY = "134"
-        self.CommandButton2.Width = 59
-        self.CommandButton2.Height = 13
-        self.CommandButton2.Label = "Cancel"
-        self.CommandButton2.PushButtonType = 2
+        self.CancelButton.Name = "CancelButton"
+        self.CancelButton.TabIndex = 8
+        self.CancelButton.PositionX = "23"
+        self.CancelButton.PositionY = "134"
+        self.CancelButton.Width = 59
+        self.CancelButton.Height = 13
+        self.CancelButton.Label = "Cancel"
+        self.CancelButton.PushButtonType = 2
 
         # inserts the control model into the dialog model
-        self.DialogModel.insertByName("CommandButton2", self.CommandButton2)
+        self.DialogModel.insertByName("CancelButton", self.CancelButton)
 
-        # add the action listener
-        self.DialogContainer.getControl('CommandButton2').addActionListener(self)
-        self.DialogContainer.getControl('CommandButton2').setActionCommand('CommandButton2_OnClick')
+        # # add the action listener
+        # self.DialogContainer.getControl('CancelButton').addActionListener(self)
+        # self.DialogContainer.getControl('CancelButton').setActionCommand('CancelButton_OnClick')
 
         # --------- create an instance of GroupBox control, set properties ---
         self.FrameControl1 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlGroupBoxModel")
@@ -226,13 +229,10 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
     #               Action events
     # -----------------------------------------------------------
 
-    def actionPerformed(self, oActionEvent):
-        
-        if oActionEvent.ActionCommand == 'CommandButton1_OnClick':
-            self.CommandButton1_OnClick()
+    def mousePressed(self, evt):
+        self.pick_folder()
 
-        if oActionEvent.ActionCommand == 'CommandButton2_OnClick':
-            self.CommandButton2_OnClick()
-
+    def keyPressed(self, evt):
+        self.pick_folder()
 
 # ----------------- END GENERATED CODE ----------------------------------------
