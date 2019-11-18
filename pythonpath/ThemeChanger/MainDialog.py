@@ -9,6 +9,7 @@ from ThemeChanger.UI.MainDialog_UI import MainDialog_UI
 from ThemeChanger.ImportDialog import ImportDialog
 from ThemeChanger.CreateDialog import CreateDialog
 from ThemeChanger.DetailsDialog import DetailsDialog
+import ThemeChanger.Helper as Helper
 
 from os import listdir, makedirs
 from os.path import exists, isfile
@@ -115,6 +116,11 @@ class MainDialog(MainDialog_UI):
     def showDialog(self):
         self.DialogContainer.setVisible(True)
         self.DialogContainer.createPeer(self.Toolkit, None)
+        try:
+            Helper.prepare_new_install(self.ctx)
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
         self.DialogContainer.execute()
 
     # -----------------------------------------------------------
