@@ -4,13 +4,13 @@ Extension to manage LibreOffice Theme. This extension is based on [LibreOffice T
 ## Target
 - Start Poit
 - [x] Wireframe and concept
-- [ ] UI Development
+- [x] UI Development
 
 - Manage theme for LibreOffice 6.x
-- [ ] Import Theme (we will use \*.lotc as theme format)
+- [x] Import Theme (we will use \*.lotc as theme format)
 - [ ] Apply theme to LibreOffice 6.x 
 - [ ] Remove imported theme from LO-TC list
-- [ ] Create own theme
+- [x] Create own theme
 
 ## How to use this extension
  ... 
