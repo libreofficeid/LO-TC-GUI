@@ -41,7 +41,7 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         self.DialogModel.PositionX = "50"
         self.DialogModel.PositionY = "30"
         self.DialogModel.Width = 175
-        self.DialogModel.Height = 152
+        self.DialogModel.Height = 140
         self.DialogModel.Closeable = True
         self.DialogModel.Moveable = True
         self.DialogModel.Title = "Create New Theme"
@@ -53,7 +53,7 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         self.Label1.Name = "Label1"
         self.Label1.TabIndex = 0
         self.Label1.PositionX = "10"
-        self.Label1.PositionY = "52"
+        self.Label1.PositionY = "45"
         self.Label1.Width = 150
         self.Label1.Height = 10
         self.Label1.Label = "Theme Name (e.g Awesome Theme)"
@@ -67,41 +67,13 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         self.Label2.Name = "Label2"
         self.Label2.TabIndex = 10
         self.Label2.PositionX = "10"
-        self.Label2.PositionY = "90"
+        self.Label2.PositionY = "77"
         self.Label2.Width = 150
         self.Label2.Height = 10
         self.Label2.Label = "Path to Save This Theme"
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("Label2", self.Label2)
-
-        # --------- create an instance of FixedText control, set properties ---
-        self.Label3 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
-
-        # self.Label3.Name = "Label3"
-        # self.Label3.TabIndex = 5
-        # self.Label3.PositionX = "10"
-        # self.Label3.PositionY = "76"
-        # self.Label3.Width = 154
-        # self.Label3.Height = 8
-        # self.Label3.Label = "Insert your theme name here"
-
-        # inserts the control model into the dialog model
-        self.DialogModel.insertByName("Label3", self.Label3)
-
-        # --------- create an instance of FixedText control, set properties ---
-        self.Label4 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
-
-        # self.Label4.Name = "Label4"
-        # self.Label4.TabIndex = 7
-        # self.Label4.PositionX = "10"
-        # self.Label4.PositionY = "113"
-        # self.Label4.Width = 154
-        # self.Label4.Height = 8
-        # self.Label4.Label = "Save path for placing your new theme"
-
-        # inserts the control model into the dialog model
-        self.DialogModel.insertByName("Label4", self.Label4)
 
         # --------- create an instance of FixedText control, set properties ---
         self.Label5 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
@@ -117,20 +89,6 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("Label5", self.Label5)
 
-        # --------- create an instance of FixedText control, set properties ---
-        self.Label6 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
-
-        # self.Label6.Name = "Label6"
-        # self.Label6.TabIndex = 11
-        # self.Label6.PositionX = "10"
-        # self.Label6.PositionY = "40"
-        # self.Label6.Width = 154
-        # self.Label6.Height = 8
-        # self.Label6.Label = "Insert your name here"
-
-        # inserts the control model into the dialog model
-        self.DialogModel.insertByName("Label6", self.Label6)
-
         # --------- create an instance of FileControl control, set properties ---
         # self.NewThemeFolderField = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFileControlModel")
         self.NewThemeFolderField = self.DialogModel.createInstance("com.sun.star.awt.UnoControlEditModel")
@@ -138,8 +96,8 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         self.NewThemeFolderField.Name = "NewThemeFolderField"
         self.NewThemeFolderField.TabIndex = 4
         self.NewThemeFolderField.PositionX = "10"
-        self.NewThemeFolderField.PositionY = "100"
-        self.NewThemeFolderField.Width = 156
+        self.NewThemeFolderField.PositionY = "87"
+        self.NewThemeFolderField.Width = 135
         self.NewThemeFolderField.Height = 12
 
         # inserts the control model into the dialog model
@@ -153,7 +111,7 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         self.ThemeNameField.Name = "ThemeNameField"
         self.ThemeNameField.TabIndex = 3
         self.ThemeNameField.PositionX = "10"
-        self.ThemeNameField.PositionY = "64"
+        self.ThemeNameField.PositionY = "57"
         self.ThemeNameField.Width = 155
         self.ThemeNameField.Height = 12
 
@@ -178,8 +136,8 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
 
         self.CreateButton.Name = "CreateButton"
         self.CreateButton.TabIndex = 6
-        self.CreateButton.PositionX = "85"
-        self.CreateButton.PositionY = "134"
+        self.CreateButton.PositionX = "90"
+        self.CreateButton.PositionY = "120"
         self.CreateButton.Width = 59
         self.CreateButton.Height = 13
         self.CreateButton.Label = "Create"
@@ -197,8 +155,8 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
 
         self.CancelButton.Name = "CancelButton"
         self.CancelButton.TabIndex = 8
-        self.CancelButton.PositionX = "23"
-        self.CancelButton.PositionY = "134"
+        self.CancelButton.PositionX = "25"
+        self.CancelButton.PositionY = "120"
         self.CancelButton.Width = 59
         self.CancelButton.Height = 13
         self.CancelButton.Label = "Cancel"
@@ -211,6 +169,23 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         # self.DialogContainer.getControl('CancelButton').addActionListener(self)
         # self.DialogContainer.getControl('CancelButton').setActionCommand('CancelButton_OnClick')
 
+        # --------- create an instance of Button control, set properties ---
+
+        self.BrowseButton = self.DialogModel.createInstance("com.sun.star.awt.UnoControlButtonModel")
+
+        self.BrowseButton.Name = "BrowseButton"
+        self.BrowseButton.TabIndex = 3
+        self.BrowseButton.PositionX = "141"
+        self.BrowseButton.PositionY = "86"
+        self.BrowseButton.Width = 24
+        self.BrowseButton.Height = 14
+        self.BrowseButton.Label = "Browse"
+
+        # inserts the control model into the dialog model
+        self.DialogModel.insertByName("BrowseButton", self.BrowseButton)
+        self.DialogContainer.getControl('BrowseButton').addActionListener(self)
+        self.DialogContainer.getControl('BrowseButton').setActionCommand('BrowseButton_OnClick')
+
         # --------- create an instance of GroupBox control, set properties ---
         self.FrameControl1 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlGroupBoxModel")
 
@@ -219,7 +194,7 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         self.FrameControl1.PositionX = "3"
         self.FrameControl1.PositionY = "3"
         self.FrameControl1.Width = 168
-        self.FrameControl1.Height = 128
+        self.FrameControl1.Height = 110
         self.FrameControl1.Label = "Create New Theme"
 
         # inserts the control model into the dialog model
@@ -228,6 +203,9 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
     # -----------------------------------------------------------
     #               Action events
     # -----------------------------------------------------------
+    def actionPerformed(self, oActionEvent):
+        if oActionEvent.ActionCommand == 'BrowseButton_OnClick':
+            self.pick_folder()
 
     def mousePressed(self, evt):
         self.pick_folder()
