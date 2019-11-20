@@ -5,7 +5,6 @@ import uno
 import subprocess
 import unohelper
 import traceback
-# from elevate import elevate
 
 # Setup intro
 def prepare_new_install(ctx):
@@ -51,7 +50,7 @@ def prepare_new_install(ctx):
     active_dir = lotcdir + "/active-theme"
     RUN_ME = "import os, sys; " \
              "os.chdir('{}');" \
-             "from Helper import *;" \
+             "from Helper import setup_intro_image, setup_sofficerc, setup_personas;" \
              "setup_intro_image('{}', '{}');" \
              "setup_sofficerc('{}', '{}');" \
              "setup_personas('{}', '{}');".format(current_dir, program_sysdir, active_dir, program_sysdir, active_dir,
@@ -115,3 +114,24 @@ def setup_personas(personas_sysdir, personas_userdir):
         except Exception as e:
             print(e)
             traceback.print_exc()
+
+def parse_manifest(manifest_dir):
+    if manifest_dir:
+        import xml.etree.ElementTree as Et
+        root = Et.parse(manifest_dir+"/manifest.xml").getroot()
+        theme_name = root.find("theme_name").text
+        description = root.find("description").text
+        version = root.find("version").text
+        author = root.find("author").text
+        screenshots = ["file://{}/{}".format(manifest_dir, ss.text) for ss in root.findall("assets/img")]
+        data = {
+            "author": author,
+            "description": description,
+            "name": theme_name,
+            "screenshots": screenshots,
+            "version": version
+        }
+        # print(data)
+        return data
+    else:
+        return None
