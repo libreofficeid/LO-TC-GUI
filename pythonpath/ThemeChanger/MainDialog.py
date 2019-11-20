@@ -11,8 +11,8 @@ from ThemeChanger.CreateDialog import CreateDialog
 from ThemeChanger.DetailsDialog import DetailsDialog
 import ThemeChanger.Helper as Helper
 
-from os import listdir, makedirs
-from os.path import exists, isfile, abspath, dirname
+from os import listdir, makedirs, readlink
+from os.path import exists, isfile, abspath, dirname, relpath
 from shutil import copytree as copy_to_userdir, rmtree
 import tempfile
 import traceback
@@ -105,7 +105,10 @@ class MainDialog(MainDialog_UI):
                 installed_themes.append(item)
 
         if "active-theme" in installed_themes:
-            active_theme = Helper.parse_manifest(userdir + "/lotc-themes/active-theme")["name"]
+            if exists(userdir + "/lotc-themes/active-theme/manifest.xml"):
+                active_theme = Helper.parse_manifest(userdir + "/lotc-themes/active-theme")["name"]
+            else:
+                active_theme = relpath(readlink("active-theme"))
             print("remove active-theme from list")
             installed_themes.remove("active-theme")
 
