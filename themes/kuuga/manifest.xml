@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    The manifest.xml is mean to provide usefull informations about the theme. This file must located in the theme directory and the name is case sensitive.
+--> 
+<!--
+    unique identifier
+-->
+
+<lotc author-name="Rania Amina">
+    <desc>
+        Kuuga is LO-TC theme with dark accent. This theme inspired by Kuuga Series, Japanese super hero that usually called by Kamen Rider or Masked Rider.
+    </desc>
+    <assets id="personas">
+        <persona-list>personas/personas_list.txt</persona-list>
+        <footer-img>personas/kuuga/footer.png</footer-img>
+        <header-img>personas/kuuga/header.png</header-img>
+        <preview>persona/kuuga/preview.png</preview>
+    </assets>
+    <assets id="program">
+        <intro>program/intro.png</intro>
+        <soffice>program/sofficerc</soffice>
+    </assets>
+    <assets id="screnshots">
+        <img id="screenshot-1">screenshots/screenshot-1.png</img>
+        <img id="screenshot-2">screenshots/screenshot-2.png</img>
+    </assets>
+</lotc>

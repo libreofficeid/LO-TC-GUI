@@ -64,7 +64,7 @@ class CreateDialog(CreateDialog_UI):
         theme_manifest_data = {"name": theme_name, "author": author_name, "version": "1.0"}
         self.write_content(content_type="xml", save_to=theme_manifest_path, data=theme_manifest_data)
 
-        return self.messageBox("Success creating theme in: %s\n You can zip it and change the extension into lotc" % new_location_path,"Success!")
+        return self.messageBox("Successfully initializing your new theme in: %s\n \n A complete guide to create LO-TC themes can be found at: https://libreoffice.id/lotc" % new_location_path,"Success!")
         pass
 
     # --------- helpers ---------------------

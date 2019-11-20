@@ -128,7 +128,7 @@ class MainDialog_UI(unohelper.Base, XActionListener, XItemListener, XJobExecutor
         self.lotcLabel.PositionY = "5"
         self.lotcLabel.Width = 260
         self.lotcLabel.Height = 24
-        self.lotcLabel.Label = "Welcome to LibreOffice Theme Changer.\nPlease choose theme you like than hit apply.\nOr you can import your own theme using Import Theme button."
+        self.lotcLabel.Label = "Welcome to LibreOffice Theme Changer.\nPlease choose your prefered theme than click apply to activate it.\nOr import your own theme using Import Theme button."
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("lotcLabel", self.lotcLabel)
