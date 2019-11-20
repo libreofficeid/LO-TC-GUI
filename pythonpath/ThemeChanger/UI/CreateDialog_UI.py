@@ -54,9 +54,9 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         self.Label1.TabIndex = 0
         self.Label1.PositionX = "10"
         self.Label1.PositionY = "52"
-        self.Label1.Width = 38
+        self.Label1.Width = 150
         self.Label1.Height = 10
-        self.Label1.Label = "Theme Name"
+        self.Label1.Label = "Theme Name (e.g Awesome Theme)"
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("Label1", self.Label1)
@@ -68,9 +68,9 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         self.Label2.TabIndex = 10
         self.Label2.PositionX = "10"
         self.Label2.PositionY = "90"
-        self.Label2.Width = 43
+        self.Label2.Width = 150
         self.Label2.Height = 10
-        self.Label2.Label = "Theme Location"
+        self.Label2.Label = "Path to Save This Theme"
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("Label2", self.Label2)
@@ -78,13 +78,13 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         # --------- create an instance of FixedText control, set properties ---
         self.Label3 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
 
-        self.Label3.Name = "Label3"
-        self.Label3.TabIndex = 5
-        self.Label3.PositionX = "10"
-        self.Label3.PositionY = "76"
-        self.Label3.Width = 154
-        self.Label3.Height = 8
-        self.Label3.Label = "Insert your theme name here"
+        # self.Label3.Name = "Label3"
+        # self.Label3.TabIndex = 5
+        # self.Label3.PositionX = "10"
+        # self.Label3.PositionY = "76"
+        # self.Label3.Width = 154
+        # self.Label3.Height = 8
+        # self.Label3.Label = "Insert your theme name here"
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("Label3", self.Label3)
@@ -92,13 +92,13 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         # --------- create an instance of FixedText control, set properties ---
         self.Label4 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
 
-        self.Label4.Name = "Label4"
-        self.Label4.TabIndex = 7
-        self.Label4.PositionX = "10"
-        self.Label4.PositionY = "113"
-        self.Label4.Width = 154
-        self.Label4.Height = 8
-        self.Label4.Label = "Save path for placing your new theme"
+        # self.Label4.Name = "Label4"
+        # self.Label4.TabIndex = 7
+        # self.Label4.PositionX = "10"
+        # self.Label4.PositionY = "113"
+        # self.Label4.Width = 154
+        # self.Label4.Height = 8
+        # self.Label4.Label = "Save path for placing your new theme"
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("Label4", self.Label4)
@@ -120,13 +120,13 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         # --------- create an instance of FixedText control, set properties ---
         self.Label6 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
 
-        self.Label6.Name = "Label6"
-        self.Label6.TabIndex = 11
-        self.Label6.PositionX = "10"
-        self.Label6.PositionY = "40"
-        self.Label6.Width = 154
-        self.Label6.Height = 8
-        self.Label6.Label = "Insert your name here"
+        # self.Label6.Name = "Label6"
+        # self.Label6.TabIndex = 11
+        # self.Label6.PositionX = "10"
+        # self.Label6.PositionY = "40"
+        # self.Label6.Width = 154
+        # self.Label6.Height = 8
+        # self.Label6.Label = "Insert your name here"
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("Label6", self.Label6)
