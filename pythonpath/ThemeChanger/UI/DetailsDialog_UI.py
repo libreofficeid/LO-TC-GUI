@@ -25,9 +25,25 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
     """
 
     def __init__(self, ctx=uno.getComponentContext(), theme_data={}):
-        self.theme_name = theme_data["name"] if (not theme_data.get("name") == None) else "Dummy theme"
-        self.theme_description = theme_data["description"] if (not theme_data.get("description") == None) else "Hello world,\n this is dummy theme"
-        self.theme_author = theme_data["author"] if (not theme_data.get("author") == None) else "libreoffice.id"
+        if (not theme_data.get("name") == None):
+            self.theme_name = theme_data["name"]
+        else:
+            self.theme_name = "Dummy theme"
+
+        if (not theme_data.get("description") == None):
+            self.theme_description = theme_data["description"]
+        else:
+            self.theme_description = "Hello world,\n this is dummy theme"
+
+        if (not theme_data.get("author") == None):
+            self.theme_author = theme_data["author"]
+        else:
+            self.theme_author = "libreoffice.id"
+
+        if (not theme_data.get("screenshots") == None):
+            self.theme_screenshots = theme_data["screenshots"]
+        else:
+            self.theme_screenshots = None
 
         self.LocalContext = ctx
         self.ServiceManager = self.LocalContext.ServiceManager
@@ -108,23 +124,25 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.DialogContainer.getControl('CloseButton').setActionCommand('CloseButton_OnClick')
 
         # --------- create an instance of Edit control, set properties ---
-        self.DescriptionField = self.DialogModel.createInstance("com.sun.star.awt.UnoControlEditModel")
+        self.DescriptionField = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
 
         self.DescriptionField.Name = "DescriptionField"
         self.DescriptionField.TabIndex = 3
         self.DescriptionField.PositionX = "112"
-        self.DescriptionField.PositionY = "23"
+        self.DescriptionField.PositionY = "42"
         self.DescriptionField.Width = 128
-        self.DescriptionField.Height = 126
+        self.DescriptionField.Height = 96
         self.DescriptionField.MultiLine = True
-        self.DescriptionField.AutoHScroll = True
-        self.DescriptionField.AutoVScroll = True
-        self.DescriptionField.ReadOnly = True
-        self.DescriptionField.ContextWritingMode = False
-        self.DescriptionField.Text = self.theme_description
+        # self.DescriptionField.AutoHScroll = True
+        # self.DescriptionField.AutoVScroll = True
+        # self.DescriptionField.ReadOnly = True
+        # self.DescriptionField.ContextWritingMode = False
+        # self.DescriptionField.Enabled = False
+        self.DescriptionField.Label = self.theme_description
         # self.DescriptionField.Text = "Hello World! this is description texts. Insert more texts here...\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus vitae sem ac rutrum. Nullam justo ligula, fringilla non ultricies.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus vitae sem ac rutrum. Nullam justo ligula, fringilla non ultricies.\n\nauthor: libreoffice.id "
 
         # inserts the control model into the dialog model
+        print(dir(self.DescriptionField))
         self.DialogModel.insertByName("DescriptionField", self.DescriptionField)
 
         # --------- create an instance of ImageControl control, set properties ---
@@ -136,6 +154,11 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.ImgThumb1.PositionY = "23"
         self.ImgThumb1.Width = 27
         self.ImgThumb1.Height = 24
+        self.ImgThumb1.ScaleImage = True
+        self.ImgThumb1.ScaleMode = 1
+        self.ImgThumb1.Border = 0
+        if len(self.theme_screenshots) > 0:
+            self.ImgThumb1.ImageURL = self.theme_screenshots[0]
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("ImgThumb1", self.ImgThumb1)
@@ -149,6 +172,11 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.ImgThumb2.PositionY = "23"
         self.ImgThumb2.Width = 27
         self.ImgThumb2.Height = 24
+        self.ImgThumb2.ScaleImage = True
+        self.ImgThumb2.ScaleMode = 1
+        self.ImgThumb2.Border = 0
+        if len(self.theme_screenshots) > 0:
+            self.ImgThumb2.ImageURL = self.theme_screenshots[1]
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("ImgThumb2", self.ImgThumb2)
@@ -162,6 +190,9 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.ImgThumb3.PositionY = "23"
         self.ImgThumb3.Width = 27
         self.ImgThumb3.Height = 24
+        self.ImgThumb3.ScaleImage = True
+        self.ImgThumb3.ScaleMode = 1
+        self.ImgThumb3.Border = 0
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("ImgThumb3", self.ImgThumb3)
@@ -172,9 +203,15 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.ImgPreview.Name = "ImgPreview"
         self.ImgPreview.TabIndex = 7
         self.ImgPreview.PositionX = "9"
-        self.ImgPreview.PositionY = "51"
+        self.ImgPreview.PositionY = "48"
         self.ImgPreview.Width = 94
-        self.ImgPreview.Height = 98
+        self.ImgPreview.Height = 64
+        self.ImgPreview.ScaleImage = True
+        self.ImgPreview.ScaleMode = 1
+        self.ImgPreview.Border = 0
+        # print(dir(self.ImgPreview))
+        if len(self.theme_screenshots) > 0:
+            self.ImgPreview.ImageURL = self.theme_screenshots[0]
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("ImgPreview", self.ImgPreview)
@@ -190,9 +227,32 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.Label1.Height = 17
         self.Label1.Label = "Details for %s" % self.theme_name
         self.Label1.VerticalAlign = 1
-        self.Label1.FontWeight = "800"
+        self.Label1.FontCharWidth = 14
+        self.Label1.FontWidth = 14
+        self.Label1.FontHeight = 14
+        self.Label1.FontType = 2
+        self.Label1.FontWeight = 1
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("Label1", self.Label1)
+
+        # --------- create an instance of FixedText control, set properties ---
+        self.Label2 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
+
+        self.Label2.Name = "Label2"
+        self.Label2.TabIndex = 8
+        self.Label2.PositionX = "112"
+        self.Label2.PositionY = "23"
+        self.Label2.Width = 100
+        self.Label2.Height = 20
+        self.Label2.Label = "%s Theme by %s" % (self.theme_name,self.theme_author)
+        self.Label2.VerticalAlign = 1
+        self.Label2.FontCharWidth = 12
+        self.Label2.FontWidth = 12
+        self.Label2.FontHeight = 12
+        self.Label2.FontType = 2
+        self.Label2.FontWeight = 1
+        # inserts the control model into the dialog model
+        self.DialogModel.insertByName("Label2", self.Label2)
 
     # -----------------------------------------------------------
     #               Action events
