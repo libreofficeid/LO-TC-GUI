@@ -113,7 +113,7 @@ class MainDialog_UI(unohelper.Base, XActionListener, XItemListener, XJobExecutor
         self.themeListBox.Width = 274
         self.themeListBox.Height = 135
 
-        print(dir(self.themeListBox))
+        # print(dir(self.themeListBox))
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("themeListBox", self.themeListBox)

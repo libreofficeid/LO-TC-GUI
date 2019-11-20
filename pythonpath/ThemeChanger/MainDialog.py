@@ -99,8 +99,8 @@ class MainDialog(MainDialog_UI):
         for item in installed_path:
             if item == "active-theme":
                 installed_themes.append("active-theme")
-            elif exists(userdir + "/lotc-themes/" + item + "/manifest.xml"):
-                installed_themes.append(Helper.parse_manifest(userdir + "/lotc-themes/" + item)["name"])
+            # elif exists(userdir + "/lotc-themes/" + item + "/manifest.xml"):
+            #     installed_themes.append(Helper.parse_manifest(userdir + "/lotc-themes/" + item)["name"])
             else:
                 installed_themes.append(item)
 
@@ -127,7 +127,7 @@ class MainDialog(MainDialog_UI):
         thumbnail_active_full_path = dirname(abspath(__file__)) + "/UI/icons/active.svg"
         thumbnail_inactive_full_path = dirname(abspath(__file__)) + "/UI/icons/nonactive.png"
         is_active = False
-        if name == active_theme:
+        if name.lower() == active_theme.lower():
             is_active = True
         print("registering '%s' to dialog" % name)
         if is_active:
@@ -172,6 +172,13 @@ class MainDialog(MainDialog_UI):
             userdir = uno.fileUrlToSystemPath(ps.getSubstituteVariableValue("$(user)"))
             theme_dir = userdir + "/lotc-themes/" + theme_name
             theme_data = Helper.parse_manifest(theme_dir)
+            if theme_data == None:
+                theme_data = {
+                    "author": "LibreOffice",
+                    "description": "LibreOffice default theme",
+                    "name": theme_name,
+                    "screenshots": ["file://{}/program/intro.png".format(theme_dir)]
+                }
             detailDialog = DetailsDialog(ctx=self.ctx, theme_data=theme_data)
         except Exception as e:
             print(e)

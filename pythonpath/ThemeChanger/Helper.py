@@ -116,7 +116,7 @@ def setup_personas(personas_sysdir, personas_userdir):
             traceback.print_exc()
 
 def parse_manifest(manifest_dir):
-    if manifest_dir:
+    try:
         import xml.etree.ElementTree as Et
         root = Et.parse(manifest_dir+"/manifest.xml").getroot()
         theme_name = root.find("theme_name").text
@@ -133,5 +133,5 @@ def parse_manifest(manifest_dir):
         }
         # print(data)
         return data
-    else:
+    except OSError:
         return None

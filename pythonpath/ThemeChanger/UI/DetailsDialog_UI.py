@@ -28,22 +28,22 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         if (not theme_data.get("name") == None):
             self.theme_name = theme_data["name"]
         else:
-            self.theme_name = "Dummy theme"
+            self.theme_name = "LibreOffice Theme Default"
 
         if (not theme_data.get("description") == None):
             self.theme_description = theme_data["description"]
         else:
-            self.theme_description = "Hello world,\n this is dummy theme"
+            self.theme_description = "This is LibreOffice default theme."
 
         if (not theme_data.get("author") == None):
             self.theme_author = theme_data["author"]
         else:
-            self.theme_author = "libreoffice.id"
+            self.theme_author = "libreoffice"
 
         if (not theme_data.get("screenshots") == None):
             self.theme_screenshots = theme_data["screenshots"]
         else:
-            self.theme_screenshots = None
+            self.theme_screenshots = []
 
         self.LocalContext = ctx
         self.ServiceManager = self.LocalContext.ServiceManager
@@ -129,7 +129,7 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.DescriptionField.Name = "DescriptionField"
         self.DescriptionField.TabIndex = 3
         self.DescriptionField.PositionX = "112"
-        self.DescriptionField.PositionY = "42"
+        self.DescriptionField.PositionY = "45"
         self.DescriptionField.Width = 128
         self.DescriptionField.Height = 96
         self.DescriptionField.MultiLine = True
@@ -142,7 +142,7 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         # self.DescriptionField.Text = "Hello World! this is description texts. Insert more texts here...\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus vitae sem ac rutrum. Nullam justo ligula, fringilla non ultricies.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus vitae sem ac rutrum. Nullam justo ligula, fringilla non ultricies.\n\nauthor: libreoffice.id "
 
         # inserts the control model into the dialog model
-        print(dir(self.DescriptionField))
+        # print(dir(self.DescriptionField))
         self.DialogModel.insertByName("DescriptionField", self.DescriptionField)
 
         # --------- create an instance of ImageControl control, set properties ---
@@ -175,7 +175,7 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.ImgThumb2.ScaleImage = True
         self.ImgThumb2.ScaleMode = 1
         self.ImgThumb2.Border = 0
-        if len(self.theme_screenshots) > 0:
+        if len(self.theme_screenshots) > 1:
             self.ImgThumb2.ImageURL = self.theme_screenshots[1]
 
         # inserts the control model into the dialog model
@@ -193,6 +193,8 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.ImgThumb3.ScaleImage = True
         self.ImgThumb3.ScaleMode = 1
         self.ImgThumb3.Border = 0
+        if len(self.theme_screenshots) > 2:
+            self.ImgThumb2.ImageURL = self.theme_screenshots[2]
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("ImgThumb3", self.ImgThumb3)
@@ -242,7 +244,7 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.Label2.TabIndex = 8
         self.Label2.PositionX = "112"
         self.Label2.PositionY = "23"
-        self.Label2.Width = 100
+        self.Label2.Width = 120
         self.Label2.Height = 20
         self.Label2.Label = "%s Theme by %s" % (self.theme_name,self.theme_author)
         self.Label2.VerticalAlign = 1
@@ -251,6 +253,7 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.Label2.FontHeight = 12
         self.Label2.FontType = 2
         self.Label2.FontWeight = 1
+        self.Label2.MultiLine = True
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("Label2", self.Label2)
 
