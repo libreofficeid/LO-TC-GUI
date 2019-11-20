@@ -46,8 +46,8 @@ class CreateDialog(CreateDialog_UI):
         # xml
         if content_type == "xml":
             import xml.etree.cElementTree as Et
-            root = Et.Element("lotc_theme")
-            Et.SubElement(root, "name").text = data["name"]
+            root = Et.Element("lotc")
+            Et.SubElement(root, "theme_name").text = data["name"]
             Et.SubElement(root, "version").text = data["version"]
             Et.SubElement(root, "author").text = data["author"]
             Et.SubElement(root, "description").text = "this is my libreoffice theme description"
@@ -99,7 +99,7 @@ class CreateDialog(CreateDialog_UI):
             new_location_path = self.get_new_theme_location() + "/" + theme_name
             author_name = self.get_author_name()
             if theme_name == "" or author_name == "" or new_location_path == "":
-                self.messageBox("Please fill all fields","Empty Field")
+                self.messageBox("Please fill all fields","Empty Field", MsgType=ERRORBOX)
                 self.showDialog()
                 return
             else:
@@ -109,7 +109,7 @@ class CreateDialog(CreateDialog_UI):
                     except OSError as e:
                         import traceback
                         print(e)
-                        self.messageBox("Unable to create destination path %s.\n%s" % (new_location_path, traceback.print_exc()),"Error")
+                        self.messageBox("Unable to create destination path %s.\n%s" % (new_location_path, traceback.print_exc()),"Error",MsgType=ERRORBOX)
                         self.showDialog()
 
                 return self.create_new_theme(theme_name, author_name, new_location_path)
