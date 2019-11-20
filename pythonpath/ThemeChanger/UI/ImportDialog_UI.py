@@ -51,11 +51,11 @@ class ImportDialog_UI(unohelper.Base, XActionListener, XKeyListener, XMouseListe
         self.LotcLocation = self.DialogModel.createInstance("com.sun.star.awt.UnoControlEditModel")
 
         self.LotcLocation.Name = "LotcLocation"
-        self.LotcLocation.TabIndex = 0
+        self.LotcLocation.TabIndex = 1
         self.LotcLocation.PositionX = "9"
-        self.LotcLocation.PositionY = "27"
-        self.LotcLocation.Width = 156
-        self.LotcLocation.Height = 12
+        self.LotcLocation.PositionY = "25"
+        self.LotcLocation.Width = 135
+        self.LotcLocation.Height = 14
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("LotcLocation", self.LotcLocation)
@@ -91,6 +91,23 @@ class ImportDialog_UI(unohelper.Base, XActionListener, XKeyListener, XMouseListe
         self.DialogModel.insertByName("Label4", self.Label4)
 
         # --------- create an instance of Button control, set properties ---
+
+        self.BrowseButton = self.DialogModel.createInstance("com.sun.star.awt.UnoControlButtonModel")
+
+        self.BrowseButton.Name = "BrowseButton"
+        self.BrowseButton.TabIndex = 0
+        self.BrowseButton.PositionX = "141"
+        self.BrowseButton.PositionY = "25"
+        self.BrowseButton.Width = 24
+        self.BrowseButton.Height = 14
+        self.BrowseButton.Label = "Browse"
+
+        # inserts the control model into the dialog model
+        self.DialogModel.insertByName("BrowseButton", self.BrowseButton)
+        self.DialogContainer.getControl('BrowseButton').addActionListener(self)
+        self.DialogContainer.getControl('BrowseButton').setActionCommand('BrowseButton_OnClick')
+
+        # --------- create an instance of Button control, set properties ---
         self.importButton = self.DialogModel.createInstance("com.sun.star.awt.UnoControlButtonModel")
 
         self.importButton.Name = "importButton"
@@ -119,6 +136,13 @@ class ImportDialog_UI(unohelper.Base, XActionListener, XKeyListener, XMouseListe
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("cancelButton", self.cancelButton)
+
+    # -----------------------------------------------------------
+    #               Action events
+    # -----------------------------------------------------------
+    def actionPerformed(self, oActionEvent):
+        if oActionEvent.ActionCommand == 'BrowseButton_OnClick':
+            self.pick_lotc()
 
     def mousePressed(self, evt):
         self.pick_lotc()

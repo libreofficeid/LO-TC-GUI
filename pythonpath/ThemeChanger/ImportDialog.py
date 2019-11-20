@@ -71,7 +71,7 @@ class ImportDialog(ImportDialog_UI):
             if not theme_location == None:
                 return theme_location
             else:
-                self.messageBox("Oops, your selected theme is not lotc file","Error")
-                return None
+                self.messageBox("Oops, your selected theme is not lotc file","Error",MsgType=ERRORBOX)
+                self.showDialog()
         else:
             return None

@@ -7,22 +7,23 @@
     unique identifier
 -->
 
-<lotc author-name="Rania Amina">
-    <desc>
-        Kuuga is LO-TC theme with dark accent. This theme inspired by Kuuga Series, Japanese super hero that usually called by Kamen Rider or Masked Rider.
-    </desc>
+<lotc>
+    <theme_name>Kuuga</theme_name>
+    <version>1.0</version>
+    <author>Rania Amina</author>
+    <description>Kuuga is LO-TC theme with dark accent. This theme inspired by Kuuga Series, Japanese super hero that usually called by Kamen Rider or Masked Rider.</description>
     <assets id="personas">
-        <persona-list>personas/personas_list.txt</persona-list>
-        <footer-img>personas/kuuga/footer.png</footer-img>
-        <header-img>personas/kuuga/header.png</header-img>
-        <preview>persona/kuuga/preview.png</preview>
+        <persona_list>personas/personas_list.txt</persona_list>
+        <footer_img>personas/kuuga/footer.png</footer_img>
+        <header_img>personas/kuuga/header.png</header_img>
+        <preview>personas/kuuga/preview.png</preview>
     </assets>
     <assets id="program">
         <intro>program/intro.png</intro>
         <soffice>program/sofficerc</soffice>
     </assets>
     <assets id="screnshots">
-        <img id="screenshot-1">screenshots/screenshot-1.png</img>
+        <img id="screenshot-1">screenshots/screenshot.png</img>
         <img id="screenshot-2">screenshots/screenshot-2.png</img>
     </assets>
 </lotc>

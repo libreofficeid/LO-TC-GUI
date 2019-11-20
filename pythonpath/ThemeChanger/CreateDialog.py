@@ -45,24 +45,54 @@ class CreateDialog(CreateDialog_UI):
     def write_content(self, content_type="xml", save_to="", data={}):
         # xml
         if content_type == "xml":
-            import xml.etree.cElementTree as Et
-            root = Et.Element("lotc_theme")
-            Et.SubElement(root, "name").text = data["name"]
-            Et.SubElement(root, "version").text = data["version"]
-            Et.SubElement(root, "author").text = data["author"]
-            Et.SubElement(root, "description").text = "this is my libreoffice theme description"
-            # write to file
-            tree = Et.ElementTree(root)
-            tree.write(save_to,encoding="UTF-8",xml_declaration=True,method="xml")
+            try:
+                import xml.etree.cElementTree as Et
+                root = Et.Element("lotc")
+                Et.SubElement(root, "theme_name").text = data["name"]
+                Et.SubElement(root, "version").text = data["version"]
+                Et.SubElement(root, "author").text = data["author"]
+                Et.SubElement(root, "description").text = "this is my libreoffice theme description"
+                personas = Et.SubElement(root, "personas", {"id": "personas"})
+                Et.SubElement(personas, "persona_list").text = "personas/personas_list.txt"
+                Et.SubElement(personas, "footer_img").text = "personas/{}/footer.png".format(data["name"])
+                Et.SubElement(personas, "header_img").text = "personas/{}/header.png".format(data["name"])
+                Et.SubElement(personas, "preview").text = "personas/{}/preview.png".format(data["name"])
+                program = Et.SubElement(root,"program", {"id": "program"})
+                Et.SubElement(program, "intro").text = "program/intro.png"
+                Et.SubElement(program, "soffice").text = "program/sofficerc"
+                screenshots = Et.SubElement(root, "screenshots", {"id": "screenshots"})
+                Et.SubElement(screenshots, "img", {"id": "screenshot-1"}).text = "screenshots/screenshot-1.png"
+                Et.SubElement(screenshots, "img", {"id": "screenshot-2"}).text = "screenshots/screenshot-2.png"
+                # write to file
+                tree = Et.ElementTree(root)
+                tree.write(save_to,encoding="UTF-8",xml_declaration=True,method="xml")
+            except Exception as e:
+                print(e)
+                import traceback
+                traceback.print_exc()
+        # personas file
+        if content_type == "personas":
+            text_personas = "{0};{0};{0}/preview.png;{0}/header.png;{0}/footer.png;;#ffffff;#000000".format(data["name"])
+            try:
+                with open(save_to, "w") as file:
+                    file.write(text_personas)
+            except Exception as e:
+                print(e)
+                import traceback
+                traceback.print_exc()
 
     def create_new_theme(self, theme_name, author_name, new_location_path):
         # make requiered directories
         makedirs(new_location_path+"/program")
-        makedirs(new_location_path + "/share/gallery/personas/" + theme_name)
+        makedirs(new_location_path + "/personas/" + theme_name)
+        makedirs(new_location_path + "/screenshots")
         # write sample manifest to theme path
         theme_manifest_path = new_location_path + "/manifest.xml"
         theme_manifest_data = {"name": theme_name, "author": author_name, "version": "1.0"}
         self.write_content(content_type="xml", save_to=theme_manifest_path, data=theme_manifest_data)
+        # write sample personas_list to theme path
+        personas_path = new_location_path + "/personas/personas_list.txt"
+        self.write_content(content_type="personas", save_to=personas_path, data=theme_manifest_data)
 
         return self.messageBox("Successfully initializing your new theme in: %s\n \n A complete guide to create LO-TC themes can be found at: https://libreoffice.id/lotc" % new_location_path,"Success!")
         pass
@@ -99,7 +129,7 @@ class CreateDialog(CreateDialog_UI):
             new_location_path = self.get_new_theme_location() + "/" + theme_name
             author_name = self.get_author_name()
             if theme_name == "" or author_name == "" or new_location_path == "":
-                self.messageBox("Please fill all fields","Empty Field")
+                self.messageBox("Please fill all fields","Empty Field", MsgType=ERRORBOX)
                 self.showDialog()
                 return
             else:
@@ -109,7 +139,7 @@ class CreateDialog(CreateDialog_UI):
                     except OSError as e:
                         import traceback
                         print(e)
-                        self.messageBox("Unable to create destination path %s.\n%s" % (new_location_path, traceback.print_exc()),"Error")
+                        self.messageBox("Unable to create destination path %s.\n%s" % (new_location_path, traceback.print_exc()),"Error",MsgType=ERRORBOX)
                         self.showDialog()
 
                 return self.create_new_theme(theme_name, author_name, new_location_path)
