@@ -32,7 +32,7 @@ class MainDialog(MainDialog_UI):
 
         # --------- my code ---------------------
 
-        self.DialogModel.Title = "MainDialog"
+        # self.DialogModel.Title = "MainDialog"
         # mri(self.ctx, self.DialogModel)
 
     # --------- helpers ---------------------
@@ -91,6 +91,10 @@ class MainDialog(MainDialog_UI):
                 print("Already exist")
         # create new component to dialog
         installed_themes = listdir(userdir + "/lotc-themes")
+        if "active-theme" in installed_themes:
+            print("remove active-theme from list")
+            installed_themes.remove("active-theme")
+
         # clear first
         self.clear_theme_list()
         # then generate
@@ -116,11 +120,9 @@ class MainDialog(MainDialog_UI):
     def showDialog(self):
         self.DialogContainer.setVisible(True)
         self.DialogContainer.createPeer(self.Toolkit, None)
-        try:
-            Helper.prepare_new_install(self.ctx)
-        except Exception as e:
-            print(e)
-            traceback.print_exc()
+        Helper.prepare_new_install(self.ctx)
+        # get os env
+        self.register_new_item(self.ctx)
         self.DialogContainer.execute()
 
     # -----------------------------------------------------------
