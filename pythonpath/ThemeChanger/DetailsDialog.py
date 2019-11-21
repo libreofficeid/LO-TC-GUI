@@ -23,6 +23,7 @@ class DetailsDialog(DetailsDialog_UI):
     '''
     def __init__(self, ctx=uno.getComponentContext(), theme_data={}, **kwargs):
         self.theme_data = theme_data
+        self.current_active_theme = theme_data["current_active"]
         self.ctx = ctx
         DetailsDialog_UI.__init__(self, self.ctx, self.theme_data)
 
@@ -52,7 +53,8 @@ class DetailsDialog(DetailsDialog_UI):
         if self.theme_data["name"] == self.theme_data["current_active"]:
             self.DialogContainer.getControl("InstallButton").setEnable(False)
             self.DialogContainer.getControl("InstallButton").Label = "Activated"
-        return self.DialogContainer.execute()
+        self.DialogContainer.execute()
+        return self.current_active_theme
 
     # -----------------------------------------------------------
     #               Action events
@@ -91,6 +93,7 @@ class DetailsDialog(DetailsDialog_UI):
                         file.write(current_personas_data + current_content)
             # update the registry
             self.update_registry(current_personas_data)
+            self.current_active_theme = self.theme_data["name"]
             self.messageBox("{} was successfully installed, restart LibreOffice to apply changes".format(self.theme_data["name"]), "Success!",INFOBOX)
         except Exception as e:
             print(e)
