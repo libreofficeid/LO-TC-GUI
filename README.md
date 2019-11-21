@@ -43,7 +43,7 @@ This is main dialog of LO-TC. All of imported theme will listed at white area. G
 
 ![Detail of Theme](assets/lotc-4.png)
 
-Click Apply if you wanna apply this theme, or Remove to remove this theme from LO-TC list.
+Click Activate if you wanna apply this theme, or Remove to remove this theme from LO-TC list.
 
 LO-TC can help you to creat your own theme. We use `*.lotc` as main format for LO-TC theme file. At the main dialog, click Create New Theme in order to start creating your own theme.
 
@@ -53,6 +53,7 @@ Please complete the required data as you see at this dialog, including Author Na
 
 Click Create button, to finish this step. Please go to path where your theme saved. Your next task is completing that directory so look like this tree. Don't forget to add several information about your theme into manifest.xml file.
 
+```language
 ```bash
 theme-name
 ├── manifest.xml
