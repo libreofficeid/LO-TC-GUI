@@ -53,6 +53,7 @@ Please complete the required data as you see at this dialog, including Author Na
 
 Click Create button, to finish this step. Please go to path where your theme saved. Your next task is completing that directory so look like this tree. Don't forget to add several information about your theme into manifest.xml file.
 
+``bash
 theme-name
 ├── manifest.xml
 ├── personas
@@ -68,6 +69,7 @@ theme-name
     ├── screenshot-3.png
     ├── screenshot-2.png
     └── screenshot.png
+```
 
 We'll provide complete guide about step by step to create own LO-TC Theme in other post soon.
 
