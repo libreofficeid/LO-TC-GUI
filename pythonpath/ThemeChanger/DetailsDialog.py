@@ -77,7 +77,7 @@ class DetailsDialog(DetailsDialog_UI):
                 self.DialogContainer.getControl("InstallButton").setEnable(True)
                 self.DialogContainer.getControl("InstallButton").setLabel("Activate")
                 self.current_active_theme = "default-libreoffice"
-                os.system("killall soffice.bin")
+                # os.system("killall soffice.bin")
             except Exception as e:
                 print(e)
                 import traceback
@@ -145,7 +145,7 @@ class DetailsDialog(DetailsDialog_UI):
             self.DialogContainer.getControl("RemoveButton").setLabel("Deactivate")
             self.DialogContainer.getControl("InstallButton").setEnable(False)
             self.DialogContainer.getControl("InstallButton").setLabel("Activated")
-            os.system("killall soffice.bin")
+            # os.system("killall soffice.bin")
         except Exception as e:
             print(e)
             import traceback
