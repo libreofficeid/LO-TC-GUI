@@ -62,8 +62,12 @@ def prepare_new_install(ctx):
         # run as Administrator
         sudo = "sudo"
         if sys.platform.startswith("darwin"):
-            sudo = "osascript"
-            subprocess.call(["sudo", sudo, "python3", "-c", RUN_ME])
+            try:
+                sudo = "osascript"
+                subprocess.call([sudo, "-e","tell app 'Terminal' activate do script with command (sudo python3 -c \"{}\") end tell".format(RUN_ME)])
+            except Exception as e:
+                print(e)
+                traceback.print_exc()
 
         if sys.platform.startswith("linux"):
             if os.environ.get("DISPLAY"):
