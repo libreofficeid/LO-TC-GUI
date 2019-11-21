@@ -39,7 +39,7 @@ class DetailsDialog(DetailsDialog_UI):
         sm = self.ctx.ServiceManager
         si = sm.createInstanceWithContext("com.sun.star.awt.Toolkit", self.ctx)
         mBox = si.createMessageBox(self.Toolkit, MsgType, MsgButtons, MsgTitle, MsgText)
-        mBox.execute()
+        return mBox.execute()
 
     # -----------------------------------------------------------
     #               Execute dialog
@@ -51,8 +51,9 @@ class DetailsDialog(DetailsDialog_UI):
         if self.theme_data["name"] == "default-libreoffice":
             self.DialogContainer.getControl("RemoveButton").setVisible(False)
         if self.theme_data["name"] == self.theme_data["current_active"]:
+            self.DialogContainer.getControl("RemoveButton").setLabel("Deactivate")
             self.DialogContainer.getControl("InstallButton").setEnable(False)
-            self.DialogContainer.getControl("InstallButton").Label = "Activated"
+            self.DialogContainer.getControl("InstallButton").setLabel("Activated")
         self.DialogContainer.execute()
         return self.current_active_theme
 
@@ -61,9 +62,55 @@ class DetailsDialog(DetailsDialog_UI):
     # -----------------------------------------------------------
 
     def RemoveButton_OnClick(self):
-        self.DialogModel.Title = "It's Alive! - RemoveButton"
-        self.messageBox("It's Alive! - RemoveButton", "Event: OnClick", INFOBOX)
-        # TODO: not implemented
+        import os
+        # deactivate and return to default-libreoffice
+        if self.DialogModel.getByName("RemoveButton").Label == "Deactivate":
+            try:
+                self.messageBox("Your theme will be deactivated", "Deactivate", INFOBOX)
+                active_theme = get_user_dir(self.ctx) + "/lotc-themes/active-theme"
+                default_theme_path = get_user_dir(self.ctx) + "/lotc-themes/default-libreoffice"
+                os.remove(active_theme)
+                os.symlink(default_theme_path, active_theme)
+                self.update_registry(None)
+                self.messageBox("Theme deactivation success!\nRelaunch LibreOffice to apply changes", "Deactivate", INFOBOX)
+                self.DialogContainer.getControl("RemoveButton").setLabel("Remove")
+                self.DialogContainer.getControl("InstallButton").setEnable(True)
+                self.DialogContainer.getControl("InstallButton").setLabel("Activate")
+                self.current_active_theme = "default-libreoffice"
+                # os.system("killall soffice.bin")
+            except Exception as e:
+                print(e)
+                import traceback
+                traceback.print_exc()
+        # prompt it will be removed permanently
+        elif self.DialogModel.getByName("RemoveButton").Label == "Remove":
+            choice = self.messageBox("This action will remove your theme, continue?",
+                                     "Confirm Theme Removal", QUERYBOX, BUTTONS_YES_NO)
+            # yes
+            if choice == 2:
+                try:
+                    personas_userdir = get_user_dir(self.ctx) + "/gallery/personas"
+                    theme_location = self.theme_data["theme_location"]
+                    import shutil
+                    # remove theme dir
+                    if os.path.exists(theme_location):
+                        shutil.rmtree(theme_location)
+                    # remove personas dir
+                    if os.path.exists(personas_userdir + "/" + os.path.basename(theme_location)):
+                        shutil.rmtree(personas_userdir + "/" + os.path.basename(theme_location))
+                    # update personas file
+                    with open(personas_userdir + "/personas_list.txt", "r") as fin:
+                        current_personas_data = fin.read().splitlines(True)
+                    with open(personas_userdir + "/personas_list.txt", "w") as fout:
+                        fout.writelines(current_personas_data[1:])
+                    self.update_registry(None)
+                    self.messageBox("Success removing theme", "Remove Theme", INFOBOX)
+                    self.DialogContainer.getControl("RemoveButton").setEnable(False)
+                    self.DialogContainer.getControl("InstallButton").setEnable(False)
+                except Exception as e:
+                    import traceback
+                    print(e)
+                    traceback.print_exc()
 
     def InstallButton_OnClick(self):
         try:
@@ -71,7 +118,7 @@ class DetailsDialog(DetailsDialog_UI):
             personas_userdir = get_user_dir(self.ctx) + "/gallery/personas"
             theme_location = self.theme_data["theme_location"]
             active_theme = get_user_dir(self.ctx) + "/lotc-themes/active-theme"
-            print(os.path.basename(theme_location))
+            # print(os.path.basename(theme_location))
             # re-link active-theme
             if theme_location != os.readlink(active_theme):
                 os.remove(active_theme)
@@ -94,7 +141,11 @@ class DetailsDialog(DetailsDialog_UI):
             # update the registry
             self.update_registry(current_personas_data)
             self.current_active_theme = self.theme_data["name"]
-            self.messageBox("{} was successfully installed, restart LibreOffice to apply changes".format(self.theme_data["name"]), "Success!",INFOBOX)
+            self.messageBox("{} was successfully installed, relaunch LibreOffice to apply changes".format(self.theme_data["name"]), "Success!",INFOBOX)
+            self.DialogContainer.getControl("RemoveButton").setLabel("Deactivate")
+            self.DialogContainer.getControl("InstallButton").setEnable(False)
+            self.DialogContainer.getControl("InstallButton").setLabel("Activated")
+            # os.system("killall soffice.bin")
         except Exception as e:
             print(e)
             import traceback
@@ -117,7 +168,7 @@ class DetailsDialog(DetailsDialog_UI):
                 persona.text = "default"
                 persona_settings.text = personas_data.strip()
             tree = ET.ElementTree(root)
-            tree.write(registry_file)
+            tree.write(registry_file,encoding="UTF-8",xml_declaration=True,method="xml")
         except Exception as e:
             print(e)
             import traceback

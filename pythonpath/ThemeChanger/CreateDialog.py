@@ -72,7 +72,7 @@ class CreateDialog(CreateDialog_UI):
                 traceback.print_exc()
         # personas file
         if content_type == "personas":
-            text_personas = "{0};{0};{0}/preview.png;{0}/header.png;{0}/footer.png;;#ffffff;#000000".format(data["name"])
+            text_personas = "{0};{0};{0}/preview.png;{0}/header.png;{0}/footer.png;#ffffff;#000000".format(data["name"])
             try:
                 with open(save_to, "w") as file:
                     file.write(text_personas)
