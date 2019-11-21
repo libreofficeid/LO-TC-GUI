@@ -128,6 +128,7 @@ def parse_manifest(manifest_dir):
         version = root.find("version").text
         author = root.find("author").text
         screenshots = ["file://{}/{}".format(manifest_dir, ss.text) for ss in root.findall("assets/img")]
+        persona_path = root.find("assets/persona_list").text
         data = {
             "author": author,
             "description": description,
@@ -139,3 +140,8 @@ def parse_manifest(manifest_dir):
         return data
     except OSError:
         return None
+
+def get_user_dir(ctx):
+    ps = ctx.getServiceManager().createInstanceWithContext('com.sun.star.util.PathSubstitution', ctx)
+    userdir = uno.fileUrlToSystemPath(ps.getSubstituteVariableValue("$(userurl)"))
+    return userdir

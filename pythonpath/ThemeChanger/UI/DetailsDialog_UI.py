@@ -77,7 +77,7 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.InstallButton.PositionY = "159"
         self.InstallButton.Width = 38
         self.InstallButton.Height = 15
-        self.InstallButton.Label = "Install"
+        self.InstallButton.Label = "Activate"
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("InstallButton", self.InstallButton)
