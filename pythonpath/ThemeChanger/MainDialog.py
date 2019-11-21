@@ -108,7 +108,7 @@ class MainDialog(MainDialog_UI):
             if exists(userdir + "/lotc-themes/active-theme/manifest.xml"):
                 active_theme = Helper.parse_manifest(userdir + "/lotc-themes/active-theme")["name"]
             else:
-                active_theme = relpath(readlink("active-theme"))
+                active_theme = readlink(userdir + "/lotc-themes/active-theme").split("/")[-1]
             print("remove active-theme from list")
             installed_themes.remove("active-theme")
 
