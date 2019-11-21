@@ -95,28 +95,28 @@ class MainDialog(MainDialog_UI):
 
         # create new component to dialog
         installed_path = listdir(userdir + "/lotc-themes")
-        installed_themes = []
+        self.installed_themes = []
         for item in installed_path:
             if item == "active-theme":
-                installed_themes.append("active-theme")
+                self.installed_themes.append("active-theme")
             # elif exists(userdir + "/lotc-themes/" + item + "/manifest.xml"):
             #     installed_themes.append(Helper.parse_manifest(userdir + "/lotc-themes/" + item)["name"])
             else:
-                installed_themes.append(item)
+                self.installed_themes.append(item)
 
-        if "active-theme" in installed_themes:
+        if "active-theme" in self.installed_themes:
             if exists(userdir + "/lotc-themes/active-theme/manifest.xml"):
-                active_theme = Helper.parse_manifest(userdir + "/lotc-themes/active-theme")["name"]
+                self.active_theme = Helper.parse_manifest(userdir + "/lotc-themes/active-theme")["name"]
             else:
-                active_theme = readlink(userdir + "/lotc-themes/active-theme").split("/")[-1]
+                self.active_theme = readlink(userdir + "/lotc-themes/active-theme").split("/")[-1]
             print("remove active-theme from list")
-            installed_themes.remove("active-theme")
+            self.installed_themes.remove("active-theme")
 
         # clear first
         self.clear_theme_list()
         # then generate
-        for theme in installed_themes:
-            self.create_new_component(theme, active_theme)
+        for theme in self.installed_themes:
+            self.create_new_component(theme, self.active_theme)
 
     def clear_theme_list(self):
         print("Clearing theme lists")
@@ -179,12 +179,20 @@ class MainDialog(MainDialog_UI):
                     "name": theme_name,
                     "screenshots": ["file://{}/program/intro.png".format(theme_dir)]
                 }
+            theme_data["theme_location"] = theme_dir
+            theme_data["current_active"] = self.active_theme
             detailDialog = DetailsDialog(ctx=self.ctx, theme_data=theme_data)
         except Exception as e:
             print(e)
             traceback.print_exc()
             exit(255)
-        detailDialog.showDialog()
+        new_active_theme = detailDialog.showDialog()
+        self.active_theme = new_active_theme
+        # clear first
+        self.clear_theme_list()
+        # then generate
+        for theme in self.installed_themes:
+            self.create_new_component(theme, self.active_theme)
 
     def themeListBox_OnClick(self):
         print("Theme selected: ", self.DialogContainer.getControl("themeListBox").getSelectedItem())
