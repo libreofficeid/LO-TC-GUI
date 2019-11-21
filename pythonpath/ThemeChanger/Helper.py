@@ -63,7 +63,7 @@ def prepare_new_install(ctx):
         sudo = "sudo"
         if sys.platform.startswith("darwin"):
             sudo = "osascript"
-            subprocess.call(["sudo", sudo, "python3", "-c", RUN_ME] + sys.argv)
+            subprocess.call(["sudo", sudo, "python3", "-c", RUN_ME])
 
         if sys.platform.startswith("linux"):
             if os.environ.get("DISPLAY"):
