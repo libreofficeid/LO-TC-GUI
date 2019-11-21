@@ -6,7 +6,7 @@ from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK, BUTTONS_OK_CANCEL, BU
 from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_OK, DEFAULT_BUTTON_CANCEL, DEFAULT_BUTTON_RETRY, DEFAULT_BUTTON_YES, DEFAULT_BUTTON_NO, DEFAULT_BUTTON_IGNORE
 from com.sun.star.awt.MessageBoxType import MESSAGEBOX, INFOBOX, WARNINGBOX, ERRORBOX, QUERYBOX
 from ThemeChanger.UI.DetailsDialog_UI import DetailsDialog_UI
-
+from ThemeChanger.Helper import get_user_dir
 
 # -------------------------------------
 # HELPERS FOR MRI AND  XRAY
@@ -25,6 +25,7 @@ class DetailsDialog(DetailsDialog_UI):
         self.theme_data = theme_data
         self.ctx = ctx
         DetailsDialog_UI.__init__(self, self.ctx, self.theme_data)
+
 
         # --------- my code ---------------------
 
@@ -46,7 +47,12 @@ class DetailsDialog(DetailsDialog_UI):
     def showDialog(self):
         self.DialogContainer.setVisible(True)
         self.DialogContainer.createPeer(self.Toolkit, None)
-        self.DialogContainer.execute()
+        if self.theme_data["name"] == "default-libreoffice":
+            self.DialogContainer.getControl("RemoveButton").setVisible(False)
+        if self.theme_data["name"] == self.theme_data["current_active"]:
+            self.DialogContainer.getControl("InstallButton").setEnable(False)
+            self.DialogContainer.getControl("InstallButton").Label = "Activated"
+        return self.DialogContainer.execute()
 
     # -----------------------------------------------------------
     #               Action events
@@ -58,6 +64,59 @@ class DetailsDialog(DetailsDialog_UI):
         # TODO: not implemented
 
     def InstallButton_OnClick(self):
-        self.DialogModel.Title = "It's Alive! - InstallButton"
-        self.messageBox("It's Alive! - InstallButton", "Event: OnClick", INFOBOX)
-        # TODO: not implemented
+        try:
+            import os
+            personas_userdir = get_user_dir(self.ctx) + "/gallery/personas"
+            theme_location = self.theme_data["theme_location"]
+            active_theme = get_user_dir(self.ctx) + "/lotc-themes/active-theme"
+            print(os.path.basename(theme_location))
+            # re-link active-theme
+            if theme_location != os.readlink(active_theme):
+                os.remove(active_theme)
+                os.symlink(theme_location, active_theme)
+            # copy personas to user gallery
+            current_personas_data = None
+            if not self.theme_data["name"] == "default-libreoffice":
+                if not os.path.exists(personas_userdir + "/" + os.path.basename(theme_location)):
+                    import shutil
+                    # copy dir
+                    shutil.copytree(active_theme + "/personas/" + os.path.basename(theme_location), personas_userdir + "/" + os.path.basename(theme_location))
+                # append personas data to top of system personas_list.txt
+                with open(active_theme + "/personas/personas_list.txt") as file:
+                    current_personas_data = file.read()
+                with open(personas_userdir + "/personas_list.txt","r+") as file:
+                    current_content = file.read()
+                    file.seek(0,0)
+                    if current_personas_data not in current_content:
+                        file.write(current_personas_data + current_content)
+            # update the registry
+            self.update_registry(current_personas_data)
+            self.messageBox("{} was successfully installed, restart LibreOffice to apply changes".format(self.theme_data["name"]), "Success!",INFOBOX)
+        except Exception as e:
+            print(e)
+            import traceback
+            traceback.print_exc()
+
+    def update_registry(self, personas_data):
+        try:
+            import xml.etree.ElementTree as ET
+            registry_file = get_user_dir(self.ctx) + "/registrymodifications.xcu"
+            ET.register_namespace("oor", "http://openoffice.org/2001/registry")
+            ET.register_namespace("xs", "http://www.w3.org/2001/XMLSchema")
+            ET.register_namespace("xsi", "http://www.w3.org/2001/XMLSchema-instance")
+            root = ET.parse(registry_file).getroot()
+            persona = root.find(".//*[@{http://openoffice.org/2001/registry}name='Persona']/value")
+            persona_settings = root.find(".//*[@{http://openoffice.org/2001/registry}name='PersonaSettings']/value")
+            if personas_data == None:
+                persona.text = "no"
+                persona_settings.text = ""
+            else:
+                persona.text = "default"
+                persona_settings.text = personas_data.strip()
+            tree = ET.ElementTree(root)
+            tree.write(registry_file)
+        except Exception as e:
+            print(e)
+            import traceback
+            traceback.print_exc()
+            exit(-1)
