@@ -94,23 +94,9 @@ class MainDialog(MainDialog_UI):
             print("Deleted tmpdir")
 
         # create new component to dialog
-        installed_path = listdir(userdir + "/lotc-themes")
-        self.installed_themes = []
-        for item in installed_path:
-            if item == "active-theme":
-                self.installed_themes.append("active-theme")
-            # elif exists(userdir + "/lotc-themes/" + item + "/manifest.xml"):
-            #     installed_themes.append(Helper.parse_manifest(userdir + "/lotc-themes/" + item)["name"])
-            else:
-                self.installed_themes.append(item)
-
-        if "active-theme" in self.installed_themes:
-            if exists(userdir + "/lotc-themes/active-theme/manifest.xml"):
-                self.active_theme = Helper.parse_manifest(userdir + "/lotc-themes/active-theme")["name"]
-            else:
-                self.active_theme = readlink(userdir + "/lotc-themes/active-theme").split("/")[-1]
-            print("remove active-theme from list")
-            self.installed_themes.remove("active-theme")
+        self.installed_themes = self.refresh_installed_themes(userdir)
+        self.active_theme = None
+        self.alter_installed_themes(userdir)
 
         # clear first
         self.clear_theme_list()
@@ -134,6 +120,27 @@ class MainDialog(MainDialog_UI):
             self.themeListBox.insertItem(0, name, "file://"+thumbnail_active_full_path)
         else:
             self.themeListBox.insertItem(0, name, "file://"+thumbnail_inactive_full_path)
+
+    def refresh_installed_themes(self, userdir):
+        installed_path = listdir(userdir + "/lotc-themes")
+        installed_themes = []
+        for item in installed_path:
+            if item == "active-theme":
+                installed_themes.append("active-theme")
+            else:
+                installed_themes.append(item)
+        return installed_themes
+
+    def alter_installed_themes(self, userdir):
+        if "active-theme" in self.installed_themes:
+            if exists(userdir + "/lotc-themes/active-theme/manifest.xml"):
+                self.active_theme = Helper.parse_manifest(userdir + "/lotc-themes/active-theme")["name"]
+            else:
+                self.active_theme = readlink(userdir + "/lotc-themes/active-theme").split("/")[-1]
+            print("remove active-theme from list")
+            self.installed_themes.remove("active-theme")
+
+
     # -----------------------------------------------------------
     #               Execute dialog
     # -----------------------------------------------------------
@@ -188,6 +195,8 @@ class MainDialog(MainDialog_UI):
             exit(255)
         new_active_theme = detailDialog.showDialog()
         if self.active_theme != new_active_theme:
+            self.installed_themes = self.refresh_installed_themes(userdir)
+            self.alter_installed_themes(userdir)
             self.active_theme = new_active_theme
             # clear first
             self.clear_theme_list()
