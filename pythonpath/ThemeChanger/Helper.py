@@ -73,7 +73,7 @@ def prepare_new_install(ctx):
                     if a == 0:
                         sudo = item
                         break
-            subprocess.call([sudo, sys.executable, "-c", RUN_ME] + sys.argv)
+            subprocess.call([sudo, sys.executable, "-c", RUN_ME])
         pass
     # write config that preparation completed
     with open(userdir + "/lotc-prepare", "w") as f:
