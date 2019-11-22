@@ -154,7 +154,7 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
                 HyperlinkControl.TabIndex = 5
                 HyperlinkControl.PositionX = "112"
                 HyperlinkControl.PositionY = "{}".format(str(117+(10*index)))
-                HyperlinkControl.Width = 57
+                HyperlinkControl.Width = 128
                 HyperlinkControl.Height = 12
                 HyperlinkControl.Label = text
                 HyperlinkControl.URL = url
