@@ -49,12 +49,11 @@ def prepare_new_install(ctx):
         traceback.print_exc()
     active_dir = lotcdir + "/active-theme"
     RUN_ME = "import os, sys; " \
-             "os.chdir('{}');" \
+             "os.chdir('{0}');" \
              "from Helper import setup_intro_image, setup_sofficerc, setup_personas;" \
-             "setup_intro_image('{}', '{}');" \
-             "setup_sofficerc('{}', '{}');" \
-             "setup_personas('{}', '{}');".format(current_dir, program_sysdir, active_dir, program_sysdir, active_dir,
-                                                  personas_sysdir, personas_userdir)
+             "setup_intro_image('{1}', '{2}');" \
+             "setup_sofficerc('{1}', '{2}');" \
+             "setup_personas('{3}', '{4}');"
 
     if sys.platform.startswith("win"):
         pass
@@ -64,21 +63,29 @@ def prepare_new_install(ctx):
         if sys.platform.startswith("darwin"):
             try:
                 sudo = "osascript"
-                subprocess.call([sudo, "-e","tell app 'Terminal' activate do script with command (sudo python3 -c \"{}\") end tell".format(RUN_ME)])
+                subprocess.call([sudo, "-e","tell app 'Terminal' activate do script with command (sudo python3 -c \"{}\") end tell".format(RUN_ME.format(current_dir, program_sysdir, active_dir, personas_sysdir, personas_userdir))])
             except Exception as e:
                 print(e)
                 traceback.print_exc()
 
         if sys.platform.startswith("linux"):
-            if os.environ.get("DISPLAY"):
-                prompts = ["pkexec","gksudo", "kdesudo"]
-                for item in prompts:
-                    a = os.system("which %s" % item)
-                    if a == 0:
-                        sudo = item
-                        break
-            subprocess.call([sudo, sys.executable, "-c", RUN_ME])
-        pass
+            if os.environ.get("FLATPAK_ID"):
+                # flatpak
+                insdir_flatpak = os.environ.get("HOME") + "/.local/share/flatpak/app/org.libreoffice.LibreOffice/x86_64/stable/active/files/libreoffice"
+                progdir_flatpak = insdir_flatpak + "/program"
+                personasdir_flatpak = insdir_flatpak + "/share/gallery/personas"
+                setup_intro_image(progdir_flatpak, active_dir)
+                setup_sofficerc(progdir_flatpak, active_dir)
+                setup_personas(personasdir_flatpak, personas_userdir)
+            else:
+                if os.environ.get("DISPLAY"):
+                    prompts = ["pkexec","gksudo", "kdesudo"]
+                    for item in prompts:
+                        a = os.system("which %s" % item)
+                        if a == 0:
+                            sudo = item
+                            break
+                subprocess.call([sudo, sys.executable, "-c", RUN_ME.format(current_dir, program_sysdir, active_dir, personas_sysdir, personas_userdir)])
     # write config that preparation completed
     with open(userdir + "/lotc-prepare", "w") as f:
         f.write("finished")

@@ -8,8 +8,8 @@ Extension to manage LibreOffice Theme. This extension is based on [LibreOffice T
 
 - Manage theme for LibreOffice 6.x
 - [x] Import Theme (we will use \*.lotc as theme format)
-- [ ] Apply theme to LibreOffice 6.x 
-- [ ] Remove imported theme from LO-TC list
+- [x] Apply theme to LibreOffice 6.x
+- [x] Remove imported theme from LO-TC list
 - [x] Create own theme
 
 ## How to use this extension
@@ -86,7 +86,7 @@ The target of LO-TC Development mainly is for LibreOffice 6.2 or newer. LibreOff
 	- [x] Install from distro repository
 	- [x] Install from DEB/RPM package (from web)
 	- [x] Compile from source
-	- [ ] Flatpak (on progress)
+	- [x] Flatpak
 	- [ ] Snap
 	- [ ] AppImage
 
