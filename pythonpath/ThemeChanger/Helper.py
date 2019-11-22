@@ -145,3 +145,20 @@ def get_user_dir(ctx):
     ps = ctx.getServiceManager().createInstanceWithContext('com.sun.star.util.PathSubstitution', ctx)
     userdir = uno.fileUrlToSystemPath(ps.getSubstituteVariableValue("$(userurl)"))
     return userdir
+
+# Adopted from MRi Extension
+# read config value from the node and the property name
+def get_configvalue(ctx, nodepath, prop):
+    from com.sun.star.beans import PropertyValue
+    cp = ctx.getServiceManager().createInstanceWithContext(
+        'com.sun.star.configuration.ConfigurationProvider', ctx)
+    node = PropertyValue()
+    node.Name = 'nodepath'
+    node.Value = nodepath
+    try:
+        cr = cp.createInstanceWithArguments(
+            'com.sun.star.configuration.ConfigurationAccess', (node,))
+        if cr and (cr.hasByName(prop)):
+            return cr.getPropertyValue(prop)
+    except:
+        return None
