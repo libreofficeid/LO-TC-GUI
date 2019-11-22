@@ -61,9 +61,6 @@ class CreateDialog(CreateDialog_UI):
                 program = Et.SubElement(root,"assets", {"id": "program"})
                 Et.SubElement(program, "intro").text = "program/intro.png"
                 Et.SubElement(program, "soffice").text = "program/sofficerc"
-                icon_theme = Et.SubElement(root, "assets", {"id": "icon_theme"})
-                Et.SubElement(icon_theme, "name").text = "My Preferred Icon"
-                Et.SubElement(icon_theme, "source").text = "icon/myicon.zip"
                 screenshots = Et.SubElement(root, "assets", {"id": "screenshots"})
                 Et.SubElement(screenshots, "img", {"id": "screenshot-1"}).text = "screenshots/screenshot-1.png"
                 Et.SubElement(screenshots, "img", {"id": "screenshot-2"}).text = "screenshots/screenshot-2.png"
@@ -92,7 +89,6 @@ class CreateDialog(CreateDialog_UI):
     def create_new_theme(self, theme_name, author_name, new_location_path):
         # make requiered directories
         makedirs(new_location_path+"/program")
-        makedirs(new_location_path + "/icon")
         makedirs(new_location_path + "/personas/" + theme_name.title().replace(" ",""))
         makedirs(new_location_path + "/screenshots")
         # write sample manifest to theme path
