@@ -127,13 +127,13 @@ def parse_manifest(manifest_dir):
         description = root.find("description").text
         version = root.find("version").text
         author = root.find("author").text
-        author_link = root.find("author_link").text
+        author_link = root.find("author_url").text
         screenshots = ["file://{}/{}".format(manifest_dir, ss.text) for ss in root.findall("assets/img")]
         source_link = [{"text": sl.text, "url": sl.attrib["src"]} for sl in root.findall("source_link/link")]
         # persona_path = root.find("assets/persona_list").text
         data = {
             "author": author,
-            "author_link": author_link,
+            "author_url": author_link,
             "description": description,
             "name": theme_name,
             "screenshots": screenshots,
