@@ -51,20 +51,25 @@ class CreateDialog(CreateDialog_UI):
                 Et.SubElement(root, "theme_name").text = data["name"]
                 Et.SubElement(root, "version").text = data["version"]
                 Et.SubElement(root, "author").text = data["author"]
+                Et.SubElement(root, "author_url").text = "https://mywebsite.com"
                 Et.SubElement(root, "description").text = "this is my libreoffice theme description"
-                personas = Et.SubElement(root, "personas", {"id": "personas"})
+                personas = Et.SubElement(root, "assets", {"id": "personas"})
                 Et.SubElement(personas, "persona_list").text = "personas/personas_list.txt"
-                Et.SubElement(personas, "footer_img").text = "personas/{}/footer.png".format(data["name"])
-                Et.SubElement(personas, "header_img").text = "personas/{}/header.png".format(data["name"])
-                Et.SubElement(personas, "preview").text = "personas/{}/preview.png".format(data["name"])
-                program = Et.SubElement(root,"program", {"id": "program"})
+                Et.SubElement(personas, "footer_img").text = "personas/{}/footer.png".format(data["name"].title().replace(" ",""))
+                Et.SubElement(personas, "header_img").text = "personas/{}/header.png".format(data["name"].title().replace(" ",""))
+                Et.SubElement(personas, "preview").text = "personas/{}/preview.png".format(data["name"].title().replace(" ",""))
+                program = Et.SubElement(root,"assets", {"id": "program"})
                 Et.SubElement(program, "intro").text = "program/intro.png"
                 Et.SubElement(program, "soffice").text = "program/sofficerc"
-                screenshots = Et.SubElement(root, "screenshots", {"id": "screenshots"})
+                screenshots = Et.SubElement(root, "assets", {"id": "screenshots"})
                 Et.SubElement(screenshots, "img", {"id": "screenshot-1"}).text = "screenshots/screenshot-1.png"
                 Et.SubElement(screenshots, "img", {"id": "screenshot-2"}).text = "screenshots/screenshot-2.png"
+                source_link = Et.SubElement(root, "source_link")
+                Et.SubElement(source_link, "link", {"id": "1", "src": "https://source-link-1"}).text = "About {}".format(data["name"])
+                Et.SubElement(source_link, "link", {"id": "2", "src": "https://source-link-2"}).text = "License"
                 # write to file
                 tree = Et.ElementTree(root)
+                self.indent(root)
                 tree.write(save_to,encoding="UTF-8",xml_declaration=True,method="xml")
             except Exception as e:
                 print(e)
@@ -72,7 +77,7 @@ class CreateDialog(CreateDialog_UI):
                 traceback.print_exc()
         # personas file
         if content_type == "personas":
-            text_personas = "{0};{0};{0}/preview.png;{0}/header.png;{0}/footer.png;#ffffff;#000000".format(data["name"])
+            text_personas = "{0};{0};{0}/preview.png;{0}/header.png;{0}/footer.png;#ffffff;#000000".format(data["name"].title().replace(" ",""))
             try:
                 with open(save_to, "w") as file:
                     file.write(text_personas)
@@ -84,7 +89,7 @@ class CreateDialog(CreateDialog_UI):
     def create_new_theme(self, theme_name, author_name, new_location_path):
         # make requiered directories
         makedirs(new_location_path+"/program")
-        makedirs(new_location_path + "/personas/" + theme_name)
+        makedirs(new_location_path + "/personas/" + theme_name.title().replace(" ",""))
         makedirs(new_location_path + "/screenshots")
         # write sample manifest to theme path
         theme_manifest_path = new_location_path + "/manifest.xml"
@@ -116,6 +121,21 @@ class CreateDialog(CreateDialog_UI):
             import traceback
             traceback.print_exc()
 
+    def indent(self, elem, level=0):
+        i = "\n" + level * "  "
+        if len(elem):
+            if not elem.text or not elem.text.strip():
+                elem.text = i + "  "
+            if not elem.tail or not elem.tail.strip():
+                elem.tail = i
+            for elem in elem:
+                self.indent(elem, level + 1)
+            if not elem.tail or not elem.tail.strip():
+                elem.tail = i
+        else:
+            if level and (not elem.tail or not elem.tail.strip()):
+                elem.tail = i
+
 
     # -----------------------------------------------------------
     #               Execute dialog
@@ -125,8 +145,9 @@ class CreateDialog(CreateDialog_UI):
         self.DialogContainer.setVisible(True)
         self.DialogContainer.createPeer(self.Toolkit, None)
         if self.DialogContainer.execute() == 1:
-            theme_name = self.get_theme_name()
-            new_location_path = self.get_new_theme_location() + "/" + theme_name
+            theme_name :str= self.get_theme_name()
+            new_theme_path = theme_name.replace(" ","-").lower()
+            new_location_path = self.get_new_theme_location() + "/" + new_theme_path
             author_name = self.get_author_name()
             if theme_name == "" or author_name == "" or new_location_path == "":
                 self.messageBox("Please fill all fields","Empty Field", MsgType=ERRORBOX)

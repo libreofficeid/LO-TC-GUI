@@ -48,7 +48,7 @@ class DetailsDialog(DetailsDialog_UI):
     def showDialog(self):
         self.DialogContainer.setVisible(True)
         self.DialogContainer.createPeer(self.Toolkit, None)
-        if self.theme_data["name"] == "default-libreoffice":
+        if self.theme_data["name"] == "Default LibreOffice":
             self.DialogContainer.getControl("RemoveButton").setVisible(False)
         if self.theme_data["name"] == self.theme_data["current_active"]:
             self.DialogContainer.getControl("RemoveButton").setLabel("Deactivate")

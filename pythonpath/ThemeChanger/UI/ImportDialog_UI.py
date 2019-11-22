@@ -54,7 +54,7 @@ class ImportDialog_UI(unohelper.Base, XActionListener, XKeyListener, XMouseListe
         self.LotcLocation.TabIndex = 1
         self.LotcLocation.PositionX = "9"
         self.LotcLocation.PositionY = "25"
-        self.LotcLocation.Width = 135
+        self.LotcLocation.Width = 130
         self.LotcLocation.Height = 14
 
         # inserts the control model into the dialog model

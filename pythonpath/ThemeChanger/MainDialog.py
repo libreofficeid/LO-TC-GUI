@@ -94,51 +94,62 @@ class MainDialog(MainDialog_UI):
             print("Deleted tmpdir")
 
         # create new component to dialog
-        self.installed_themes = self.refresh_installed_themes(userdir)
-        self.active_theme = None
-        self.alter_installed_themes(userdir)
+        try:
+            self.installed_themes = self.refresh_installed_themes(userdir)
+            self.active_theme = None
+            self.alter_installed_themes(userdir)
 
-        # clear first
-        self.clear_theme_list()
-        # then generate
-        for theme in self.installed_themes:
-            self.create_new_component(theme, self.active_theme)
+            # clear first
+            self.clear_theme_list()
+            # then generate
+            for theme in self.installed_themes:
+                self.create_new_component(theme, self.active_theme)
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
 
     def clear_theme_list(self):
         print("Clearing theme lists")
         if len(self.themeListBox.getAllItems()) > 0:
             self.themeListBox.removeAllItems()
 
-    def create_new_component(self, name, active_theme):
+    def create_new_component(self, theme, active_theme):
         thumbnail_active_full_path = dirname(abspath(__file__)) + "/UI/icons/active.svg"
         thumbnail_inactive_full_path = dirname(abspath(__file__)) + "/UI/icons/nonactive.png"
         is_active = False
-        if name.lower() == active_theme.lower():
+        if theme["name"].lower() == active_theme.lower():
             is_active = True
-        print("registering '%s' to dialog" % name)
+        print("registering '%s' to dialog" % theme["name"])
         if is_active:
-            self.themeListBox.insertItem(0, name, "file://"+thumbnail_active_full_path)
+            self.themeListBox.insertItem(0, theme["name"], "file://"+thumbnail_active_full_path)
         else:
-            self.themeListBox.insertItem(0, name, "file://"+thumbnail_inactive_full_path)
+            self.themeListBox.insertItem(0, theme["name"], "file://"+thumbnail_inactive_full_path)
 
     def refresh_installed_themes(self, userdir):
         installed_path = listdir(userdir + "/lotc-themes")
         installed_themes = []
         for item in installed_path:
             if item == "active-theme":
-                installed_themes.append("active-theme")
+                installed_themes.append({"name": "active-theme", "location": "active-theme"})
             else:
-                installed_themes.append(item)
+                if exists(userdir + "/lotc-themes/" + item + "/manifest.xml"):
+                    theme_name = Helper.parse_manifest(userdir + "/lotc-themes/" + item)["name"]
+                else:
+                    theme_name = "Default LibreOffice"
+                installed_themes.append({"name": theme_name, "location": item})
+        # print(installed_themes)
         return installed_themes
 
     def alter_installed_themes(self, userdir):
-        if "active-theme" in self.installed_themes:
-            if exists(userdir + "/lotc-themes/active-theme/manifest.xml"):
-                self.active_theme = Helper.parse_manifest(userdir + "/lotc-themes/active-theme")["name"]
-            else:
-                self.active_theme = readlink(userdir + "/lotc-themes/active-theme").split("/")[-1]
-            print("remove active-theme from list")
-            self.installed_themes.remove("active-theme")
+        for theme in self.installed_themes:
+            if theme["name"] == "active-theme":
+                if exists(userdir + "/lotc-themes/active-theme/manifest.xml"):
+                    self.active_theme = Helper.parse_manifest(userdir + "/lotc-themes/active-theme")["name"]
+                else:
+                    self.active_theme = "Default LibreOffice"
+                print("remove active-theme from list")
+                self.installed_themes.remove(theme)
+                break
 
 
     # -----------------------------------------------------------
@@ -177,7 +188,10 @@ class MainDialog(MainDialog_UI):
             ps = self.ctx.getServiceManager().createInstanceWithContext('com.sun.star.util.PathSubstitution', self.ctx)
             # get user profile dir ($HOME/.config/libreoffice/4/user/)
             userdir = uno.fileUrlToSystemPath(ps.getSubstituteVariableValue("$(user)"))
-            theme_dir = userdir + "/lotc-themes/" + theme_name
+            for theme in self.installed_themes:
+                if theme["name"] == theme_name:
+                    theme_dir = userdir + "/lotc-themes/" + theme["location"]
+                    break
             theme_data = Helper.parse_manifest(theme_dir)
             if theme_data == None:
                 theme_data = {
@@ -195,14 +209,14 @@ class MainDialog(MainDialog_UI):
             exit(255)
         new_active_theme = detailDialog.showDialog()
         if self.active_theme != new_active_theme:
-            self.installed_themes = self.refresh_installed_themes(userdir)
-            self.alter_installed_themes(userdir)
             self.active_theme = new_active_theme
-            # clear first
-            self.clear_theme_list()
-            # then generate
-            for theme in self.installed_themes:
-                self.create_new_component(theme, self.active_theme)
+        self.installed_themes = self.refresh_installed_themes(userdir)
+        self.alter_installed_themes(userdir)
+        # clear first
+        self.clear_theme_list()
+        # then generate
+        for theme in self.installed_themes:
+            self.create_new_component(theme, self.active_theme)
 
     def themeListBox_OnClick(self):
         print("Theme selected: ", self.DialogContainer.getControl("themeListBox").getSelectedItem())

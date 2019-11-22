@@ -97,7 +97,7 @@ class CreateDialog_UI(unohelper.Base, XActionListener, XMouseListener, XKeyListe
         self.NewThemeFolderField.TabIndex = 4
         self.NewThemeFolderField.PositionX = "10"
         self.NewThemeFolderField.PositionY = "87"
-        self.NewThemeFolderField.Width = 135
+        self.NewThemeFolderField.Width = 130
         self.NewThemeFolderField.Height = 12
 
         # inserts the control model into the dialog model
