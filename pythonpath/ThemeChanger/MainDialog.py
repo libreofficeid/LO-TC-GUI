@@ -195,14 +195,14 @@ class MainDialog(MainDialog_UI):
             exit(255)
         new_active_theme = detailDialog.showDialog()
         if self.active_theme != new_active_theme:
-            self.installed_themes = self.refresh_installed_themes(userdir)
-            self.alter_installed_themes(userdir)
             self.active_theme = new_active_theme
-            # clear first
-            self.clear_theme_list()
-            # then generate
-            for theme in self.installed_themes:
-                self.create_new_component(theme, self.active_theme)
+        self.installed_themes = self.refresh_installed_themes(userdir)
+        self.alter_installed_themes(userdir)
+        # clear first
+        self.clear_theme_list()
+        # then generate
+        for theme in self.installed_themes:
+            self.create_new_component(theme, self.active_theme)
 
     def themeListBox_OnClick(self):
         print("Theme selected: ", self.DialogContainer.getControl("themeListBox").getSelectedItem())
