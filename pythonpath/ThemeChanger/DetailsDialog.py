@@ -125,11 +125,14 @@ class DetailsDialog(DetailsDialog_UI):
                 os.symlink(theme_location, active_theme)
             # copy personas to user gallery
             current_personas_data = None
-            if not self.theme_data["name"] == "default-libreoffice":
-                if not os.path.exists(personas_userdir + "/" + os.path.basename(theme_location)):
+            if not self.theme_data["name"] == "Default LibreOffice":
+                for item in os.listdir(active_theme + "/personas/"):
+                    if os.path.isdir(active_theme + "/personas/" + item):
+                        personas = item
+                if not os.path.exists(personas_userdir + "/" + personas):
                     import shutil
                     # copy dir
-                    shutil.copytree(active_theme + "/personas/" + os.path.basename(theme_location), personas_userdir + "/" + os.path.basename(theme_location))
+                    shutil.copytree(active_theme + "/personas/" + personas, personas_userdir + "/" + personas)
                 # append personas data to top of system personas_list.txt
                 with open(active_theme + "/personas/personas_list.txt") as file:
                     current_personas_data = file.read()
