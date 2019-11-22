@@ -6,7 +6,7 @@ from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK, BUTTONS_OK_CANCEL, BU
 from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_OK, DEFAULT_BUTTON_CANCEL, DEFAULT_BUTTON_RETRY, DEFAULT_BUTTON_YES, DEFAULT_BUTTON_NO, DEFAULT_BUTTON_IGNORE
 from com.sun.star.awt.MessageBoxType import MESSAGEBOX, INFOBOX, WARNINGBOX, ERRORBOX, QUERYBOX
 from ThemeChanger.UI.DetailsDialog_UI import DetailsDialog_UI
-from ThemeChanger.Helper import get_user_dir
+from ThemeChanger.Helper import get_user_dir, get_configvalue
 
 # -------------------------------------
 # HELPERS FOR MRI AND  XRAY
@@ -153,24 +153,36 @@ class DetailsDialog(DetailsDialog_UI):
 
     def update_registry(self, personas_data):
         try:
-            import xml.etree.ElementTree as ET
-            registry_file = get_user_dir(self.ctx) + "/registrymodifications.xcu"
-            ET.register_namespace("oor", "http://openoffice.org/2001/registry")
-            ET.register_namespace("xs", "http://www.w3.org/2001/XMLSchema")
-            ET.register_namespace("xsi", "http://www.w3.org/2001/XMLSchema-instance")
-            root = ET.parse(registry_file).getroot()
-            persona = root.find(".//*[@{http://openoffice.org/2001/registry}name='Persona']/value")
-            persona_settings = root.find(".//*[@{http://openoffice.org/2001/registry}name='PersonaSettings']/value")
+            # /org.openoffice.Office.Common/Misc
+            # nodepath = "/org.openoffice.Office.Common/Misc"
             if personas_data == None:
-                persona.text = "no"
-                persona_settings.text = ""
+                persona= "no"
+                persona_settings = ""
             else:
-                persona.text = "default"
-                persona_settings.text = personas_data.strip()
-            tree = ET.ElementTree(root)
-            tree.write(registry_file,encoding="UTF-8",xml_declaration=True,method="xml")
+                persona = "default"
+                persona_settings = personas_data.strip()
+            self.write_config(persona,persona_settings)
+
         except Exception as e:
             print(e)
             import traceback
             traceback.print_exc()
             exit(-1)
+
+    def write_config(self, persona_data, personasettings_data):
+        from com.sun.star.beans import PropertyValue
+        config_provider = self.ctx.getServiceManager().createInstanceWithContext(
+            'com.sun.star.configuration.ConfigurationProvider', self.ctx)
+        node = PropertyValue()
+        node.Name = 'nodepath'
+        node.Value = "/org.openoffice.Office.Common/Misc"
+        try:
+            config_writer = config_provider.createInstanceWithArguments(
+                'com.sun.star.configuration.ConfigurationUpdateAccess', (node,))
+            cfg_names = ("Persona", "PersonaSettings")
+            cfg_values = (persona_data, personasettings_data)
+            config_writer.setPropertyValues(cfg_names, cfg_values)
+
+            config_writer.commitChanges()
+        except:
+            raise
