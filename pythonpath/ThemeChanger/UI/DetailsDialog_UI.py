@@ -45,6 +45,11 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         else:
             self.theme_screenshots = []
 
+        if (not theme_data.get("source_link") == None):
+            self.theme_sourcelink = theme_data["source_link"]
+        else:
+            self.theme_sourcelink = []
+
         self.LocalContext = ctx
         self.ServiceManager = self.LocalContext.ServiceManager
         self.Toolkit = self.ServiceManager.createInstanceWithContext("com.sun.star.awt.ExtToolkit", self.LocalContext)
@@ -131,19 +136,31 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.DescriptionField.PositionX = "112"
         self.DescriptionField.PositionY = "45"
         self.DescriptionField.Width = 128
-        self.DescriptionField.Height = 96
+        self.DescriptionField.Height = 72
         self.DescriptionField.MultiLine = True
-        # self.DescriptionField.AutoHScroll = True
-        # self.DescriptionField.AutoVScroll = True
-        # self.DescriptionField.ReadOnly = True
-        # self.DescriptionField.ContextWritingMode = False
-        # self.DescriptionField.Enabled = False
         self.DescriptionField.Label = self.theme_description
-        # self.DescriptionField.Text = "Hello World! this is description texts. Insert more texts here...\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus vitae sem ac rutrum. Nullam justo ligula, fringilla non ultricies.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus vitae sem ac rutrum. Nullam justo ligula, fringilla non ultricies.\n\nauthor: libreoffice.id "
 
         # inserts the control model into the dialog model
-        # print(dir(self.DescriptionField))
         self.DialogModel.insertByName("DescriptionField", self.DescriptionField)
+
+        if len(self.theme_sourcelink) > 0:
+            for index,link in enumerate(self.theme_sourcelink):
+                text = link["text"]
+                url = link["url"]
+                HyperlinkControl = self.DialogModel.createInstance(
+                    "com.sun.star.awt.UnoControlFixedHyperlinkModel")
+
+                HyperlinkControl.Name = "HyperlinkControl" + str(index)
+                HyperlinkControl.TabIndex = 5
+                HyperlinkControl.PositionX = "112"
+                HyperlinkControl.PositionY = "{}".format(str(117+(10*index)))
+                HyperlinkControl.Width = 57
+                HyperlinkControl.Height = 12
+                HyperlinkControl.Label = text
+                HyperlinkControl.URL = url
+
+                # inserts the control model into the dialog model
+                self.DialogModel.insertByName("HyperlinkControl" + str(index), HyperlinkControl)
 
         # --------- create an instance of ImageControl control, set properties ---
         self.ImgThumb1 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlImageControlModel")
