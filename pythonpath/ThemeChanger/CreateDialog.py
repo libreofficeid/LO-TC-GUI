@@ -145,7 +145,7 @@ class CreateDialog(CreateDialog_UI):
         self.DialogContainer.setVisible(True)
         self.DialogContainer.createPeer(self.Toolkit, None)
         if self.DialogContainer.execute() == 1:
-            theme_name :str= self.get_theme_name()
+            theme_name = self.get_theme_name()
             new_theme_path = theme_name.replace(" ","-").lower()
             new_location_path = self.get_new_theme_location() + "/" + new_theme_path
             author_name = self.get_author_name()
