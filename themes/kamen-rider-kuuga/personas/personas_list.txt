@@ -1,0 +1,1 @@
+KamenRiderKuuga;KamenRiderKuuga;KamenRiderKuuga/preview.png;KamenRiderKuuga/header.png;KamenRiderKuuga/footer.png;#ffffff;#000000

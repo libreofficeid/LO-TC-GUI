@@ -1,0 +1,1 @@
+KamenRiderDecade;KamenRiderDecade;KamenRiderDecade/preview.png;KamenRiderDecade/header.png;KamenRiderDecade/footer.png;#ffffff;#000000

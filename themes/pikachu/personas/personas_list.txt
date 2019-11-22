@@ -1,0 +1,1 @@
+Pikachu;Pikachu;Pikachu/preview.png;Pikachu/header.png;Pikachu/footer.png;#ffffff;#000000

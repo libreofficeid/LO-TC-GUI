@@ -1,0 +1,1 @@
+Ambiance;Ambiance;Ambiance/preview.png;Ambiance/header.png;Ambiance/footer.png;#ffffff;#000000
