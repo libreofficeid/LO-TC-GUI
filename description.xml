@@ -36,5 +36,10 @@ Tip: When edited open file in browser to check for errors.
     <extension-description>
         <src xlink:href="description/description.txt" lang="en"/>
     </extension-description>
+    <registration>
+        <simple-license accept-by="admin">
+            <license-text xlink:href="registration/license.txt" lang="en" />
+        </simple-license>
+    </registration>
 
 </description>
