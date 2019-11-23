@@ -35,6 +35,9 @@ Just like other extension, you only need to import this extension via menu: Tool
 
 For your information, at the first run, LO-TC will ask you for root permission to setup local environment. 
 
+[Update]
+Only for flatpak user, please run **lotc-flatpak-first-run.sh** first. LibreOffice will opened, then open menu: Tools -> Extension Manager -> add extension.
+
 ### LO-TC Interface
 
 ![Main Dialog](assets/lotc-1.png)
@@ -76,7 +79,7 @@ We'll provide complete guide about step by step to create own LO-TC Theme in oth
 
 [Update]
 - LOTC Theme Guide
- - [ID](https://lumbung.libreoffice.id/materi/panduan-membuat-tema-untuk-lotc/) 
+ - [ID](https://lumbung.libreoffice.id/materi/panduan-membuat-tema-untuk-lotc/gi ) 
 
 Let say your theme already finish, you can import your theme to LO-TC by clicking Import Theme.
 
