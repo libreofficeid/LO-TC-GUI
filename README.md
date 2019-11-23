@@ -74,6 +74,10 @@ theme-name
 
 We'll provide complete guide about step by step to create own LO-TC Theme in other post soon.
 
+[Update]
+- LOTC Theme Guide
+ - [ID](https://lumbung.libreoffice.id/materi/panduan-membuat-tema-untuk-lotc/) 
+
 Let say your theme already finish, you can import your theme to LO-TC by clicking Import Theme.
 
 ![Import Theme Dialog](assets/lotc-3.png), navigate the file manager to directory where the lotc file saved. If the import success, your new theme will listed in main dialog.
