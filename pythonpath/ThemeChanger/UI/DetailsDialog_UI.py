@@ -15,11 +15,10 @@
 
 import uno
 import unohelper
-from com.sun.star.awt import XActionListener
+from com.sun.star.awt import XActionListener, XMouseListener
 from com.sun.star.task import XJobExecutor
 
-
-class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
+class DetailsDialog_UI(unohelper.Base, XActionListener, XMouseListener, XJobExecutor):
     """
     Class documentation...AAAAAAAAAAAAAAAAAAAAAAA
     """
@@ -174,11 +173,12 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.ImgThumb1.ScaleImage = True
         self.ImgThumb1.ScaleMode = 1
         self.ImgThumb1.Border = 0
-        if len(self.theme_screenshots) > 0:
-            self.ImgThumb1.ImageURL = self.theme_screenshots[0]
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("ImgThumb1", self.ImgThumb1)
+        if len(self.theme_screenshots) > 0:
+            self.ImgThumb1.ImageURL = self.theme_screenshots[0]
+            self.DialogContainer.getControl("ImgThumb1").addMouseListener(self)
 
         # --------- create an instance of ImageControl control, set properties ---
         self.ImgThumb2 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlImageControlModel")
@@ -192,11 +192,12 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.ImgThumb2.ScaleImage = True
         self.ImgThumb2.ScaleMode = 1
         self.ImgThumb2.Border = 0
-        if len(self.theme_screenshots) > 1:
-            self.ImgThumb2.ImageURL = self.theme_screenshots[1]
-
+        
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("ImgThumb2", self.ImgThumb2)
+        if len(self.theme_screenshots) > 1:
+            self.ImgThumb2.ImageURL = self.theme_screenshots[1]
+            self.DialogContainer.getControl("ImgThumb2").addMouseListener(self)
 
         # --------- create an instance of ImageControl control, set properties ---
         self.ImgThumb3 = self.DialogModel.createInstance("com.sun.star.awt.UnoControlImageControlModel")
@@ -210,11 +211,12 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.ImgThumb3.ScaleImage = True
         self.ImgThumb3.ScaleMode = 1
         self.ImgThumb3.Border = 0
-        if len(self.theme_screenshots) > 2:
-            self.ImgThumb2.ImageURL = self.theme_screenshots[2]
 
         # inserts the control model into the dialog model
         self.DialogModel.insertByName("ImgThumb3", self.ImgThumb3)
+        if len(self.theme_screenshots) > 2:
+            self.ImgThumb3.ImageURL = self.theme_screenshots[2]
+            self.DialogContainer.getControl("ImgThumb3").addMouseListener(self)
 
         # --------- create an instance of ImageControl control, set properties ---
         self.ImgPreview = self.DialogModel.createInstance("com.sun.star.awt.UnoControlImageControlModel")
@@ -228,7 +230,6 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
         self.ImgPreview.ScaleImage = True
         self.ImgPreview.ScaleMode = 1
         self.ImgPreview.Border = 0
-        # print(dir(self.ImgPreview))
         if len(self.theme_screenshots) > 0:
             self.ImgPreview.ImageURL = self.theme_screenshots[0]
 
@@ -277,6 +278,10 @@ class DetailsDialog_UI(unohelper.Base, XActionListener, XJobExecutor):
     # -----------------------------------------------------------
     #               Action events
     # -----------------------------------------------------------
+    def mouseReleased(self, evt):
+        source = evt.Source.getModel()
+        self.ImgPreview.ImageURL = source.ImageURL
+
 
     def actionPerformed(self, oActionEvent):
 
