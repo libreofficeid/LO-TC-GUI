@@ -1,0 +1,1 @@
+OpensuseTheme;OpensuseTheme;OpensuseTheme/preview.png;OpensuseTheme/header.png;OpensuseTheme/footer.png;#ffffff;#000000

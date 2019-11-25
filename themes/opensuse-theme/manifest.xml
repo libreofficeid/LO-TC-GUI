@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<lotc>
+  <theme_name>openSUSE Theme</theme_name>
+  <version>1.0</version>
+  <author>Rania Amina</author>
+  <author_url>https://raniaamina.id</author_url>
+  <description>openSUSE Theme for LibreOffice. Some artwork created by Hervy QA. For best result, please use light theme on your system.</description>
+  <assets id="personas">
+    <persona_list>personas/personas_list.txt</persona_list>
+    <footer_img>personas/OpensuseTheme/footer.png</footer_img>
+    <header_img>personas/OpensuseTheme/header.png</header_img>
+    <preview>personas/OpensuseTheme/preview.png</preview>
+  </assets>
+  <assets id="program">
+    <intro>program/intro.png</intro>
+    <soffice>program/sofficerc</soffice>
+  </assets>
+  <assets id="screenshots">
+    <img id="screenshot-1">screenshots/screenshot-1.png</img>
+    <img id="screenshot-2">screenshots/screenshot-2.png</img>
+  </assets>
+  <source_link>
+    <link id="1" src="https://opensuse.id">About openSUSE Theme</link>
+    <link id="2" src="https://instagram.com/raniaamina.id">Rania Amina</link>
+  </source_link>
+</lotc>
