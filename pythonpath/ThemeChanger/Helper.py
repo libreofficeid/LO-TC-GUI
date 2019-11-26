@@ -15,6 +15,11 @@ def prepare_new_install(ctx):
     program_sysdir = instdir + "/program"
     personas_sysdir = instdir + "/share/gallery/personas"
 
+    # dir on macos
+    if sys.platform.startswith("darwin"):
+        program_sysdir = instdir + "/MacOS"
+        personas_sysdir = instdir + "/Resources/gallery/personas"
+
     userdir = uno.fileUrlToSystemPath(ps.getSubstituteVariableValue("$(userurl)"))
     personas_userdir = userdir + "/gallery/personas"
     lotcdir = userdir + "/lotc-themes"
@@ -62,8 +67,9 @@ def prepare_new_install(ctx):
         sudo = "sudo"
         if sys.platform.startswith("darwin"):
             try:
-                sudo = "osascript"
-                subprocess.call([sudo, "-e","tell app 'Terminal' activate do script with command (sudo python3 -c \"{}\") end tell".format(RUN_ME.format(current_dir, program_sysdir, active_dir, personas_sysdir, personas_userdir))])
+                # on macOS lauch libreoffice without splash banner
+                setup_sofficerc(program_sysdir, active_dir)
+                setup_personas(personas_sysdir, personas_userdir)
             except Exception as e:
                 print(e)
                 traceback.print_exc()
