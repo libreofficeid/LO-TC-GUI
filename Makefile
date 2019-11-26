@@ -16,3 +16,5 @@ zip:
 
 install:
 	unopkg add ThemeChanger.oxt
+
+# PATH=/Applications/LibreOffice.app/Contents/MacOS/:$PATH

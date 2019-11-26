@@ -15,6 +15,11 @@ def prepare_new_install(ctx):
     program_sysdir = instdir + "/program"
     personas_sysdir = instdir + "/share/gallery/personas"
 
+    # dir on macos
+    if sys.platform.startswith("darwin"):
+        program_sysdir = instdir + "/MacOS"
+        personas_sysdir = instdir + "/Resources/gallery/personas"
+
     userdir = uno.fileUrlToSystemPath(ps.getSubstituteVariableValue("$(userurl)"))
     personas_userdir = userdir + "/gallery/personas"
     lotcdir = userdir + "/lotc-themes"
