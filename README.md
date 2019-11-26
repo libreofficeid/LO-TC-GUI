@@ -29,6 +29,12 @@ make zip
 
 we have special command `make all` to everyone who wanna help us to develop this extension. This command used if you have make some update to python code, and wanna to show the update directly on your LibreOffice without re-install extension via Extension Manager. Just run `make all` then restart the LibreOffice.
 
+#### important
+If you use macOS, before running command`make all`, you must export the path below
+```
+export PATH=/Applications/LibreOffice.app/Contents/MacOS/:$PATH
+```
+
 ### Extension Installation
 
 Just like other extension, you only need to import this extension via menu: Tools -> Extension Manager, then add extension. LibreOffice should restart after new extension installation. 
@@ -98,7 +104,7 @@ The target of LO-TC Development mainly is for LibreOffice 6.2 or newer. LibreOff
 	- [ ] AppImage
 
 - Mac OS
-	- [ ] Mac OS
+	- [x] Mac OS
 
 - Windows
 	- [ ] Windows 8/8.1/10
