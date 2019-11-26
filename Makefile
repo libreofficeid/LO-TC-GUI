@@ -1,7 +1,12 @@
+LO_PATH=/opt/libreofficedev6.4
+LO_BIN=$(LO_PATH)/program
+LO_UNOPKG=$(LO_BIN)/unopkg
+
 all:	clean zip install
 
+
 clean:
-	unopkg remove ThemeChanger.oxt
+	$(LO_UNOPKG) remove ThemeChanger.oxt
 	rm ThemeChanger.oxt
 
 zip:
@@ -15,4 +20,4 @@ zip:
 		description/*
 
 install:
-	unopkg add ThemeChanger.oxt
+	$(LO_UNOPKG) add ThemeChanger.oxt
