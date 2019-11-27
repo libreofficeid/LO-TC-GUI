@@ -99,7 +99,7 @@ class CreateDialog(CreateDialog_UI):
         personas_path = new_location_path + "/personas/personas_list.txt"
         self.write_content(content_type="personas", save_to=personas_path, data=theme_manifest_data)
 
-        return self.messageBox("Successfully initializing your new theme in: %s\n \n A complete guide to create LO-TC themes can be found at: https://libreoffice.id/lotc" % new_location_path,"Success!")
+        return self.messageBox("Successfully initializing your new theme in: %s\n \n A complete guide to create LO-TC themes can be found at: https://docs.libreoffice.id/lotc" % new_location_path,"Success!")
         pass
 
     # --------- helpers ---------------------
