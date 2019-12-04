@@ -56,28 +56,18 @@ def prepare_new_install(ctx):
             import ctypes
             # os.system("MKLINK /D {1} {0}".format(replace_separator(prefered_themedir), replace_separator(lotcdir+"/active-theme")))
             # os.symlink(replace_separator(prefered_themedir), replace_separator(lotcdir+"/active-theme"), True)
-            if ctypes.windll.shell32.IsUserAnAdmin():
-                pass
-            else:
+            if not ctypes.windll.shell32.IsUserAnAdmin():
                 print('[!] The script is NOT running with administrative privileges')
                 RUN_ME = "import os; os.symlink('{0}','{1}',True)"
                 cmd = '{}'.format(RUN_ME.format(replace_separator(replace_separator(prefered_themedir),"/","\\\\"), replace_separator(replace_separator(lotcdir+"/active-theme"),"/","\\\\")))
                 #os.symlink(replace_separator(prefered_themedir), replace_separator(lotcdir+"/active-theme"), True)
-                with open(userdir+"/01.py","w") as f:
-                    f.write(cmd)
                 try:
-                    print(str(replace_separator(userdir+"/01.py")))
-                    print(str(sys.executable+"\\..\\python"))
-                    ctypes.windll.shell32.ShellExecuteW(None, "runas",
-                                                        str(sys.executable+"\\..\\python"),
-                                                        str(replace_separator(userdir+"/01.py")), None, 1)
+                    from ThemeChanger.Windows import elevate_commands
+                    elevate_commands(cmd, "01.py")
                 except Exception as e:
-                    print(e)
+                    print("Unable to complete new link active-theme, reason: " + str(e))
                     traceback.print_exc()
-##                if os.path.exists(replace_separator(userdir+"/01.py")):
-##                    print("try to remove 01.py")
-##                    os.remove(replace_separator(userdir+"/01.py"))
-                print("YUHUUUU nganu active theme")
+                    sys.exit(e.errno)
         else:
             os.symlink(prefered_themedir, lotcdir + "/active-theme")
     except Exception as e:
@@ -98,38 +88,21 @@ def prepare_new_install(ctx):
         try:
             if not ctypes.windll.shell32.IsUserAnAdmin():
                 print('[!] The script is NOT running with administrative privileges')
-                print('[+] Trying to bypass the UAC')
+                cmd = '{}'.format(RUN_ME.format(replace_separator(current_dir),
+                                                replace_separator(program_sysdir),
+                                                replace_separator(active_dir),
+                                                replace_separator(personas_sysdir),
+                                                replace_separator(personas_userdir)))
                 try:
-                    cmd = '{}'.format(RUN_ME.format(replace_separator(current_dir),
-                                                    replace_separator(program_sysdir),
-                                                    replace_separator(active_dir),
-                                                    replace_separator(personas_sysdir),
-                                                    replace_separator(personas_userdir)))
-                    with open(userdir+"/02.py","w") as f:
-                        f.write(cmd)
-                    try:
-                        print(str(replace_separator(userdir+"/02.py")))
-                        print(str(sys.executable+"\\..\\python"))
-##                        ctypes.windll.shell32.ShellExecuteW(None, "runas", str(sys.executable+"\\..\\python") , str(cmd), None, 1)
-                        ctypes.windll.shell32.ShellExecuteW(None, "runas", str(sys.executable+"\\..\\python") , str(replace_separator(userdir+"/02.py")), None, 5)
-                    except Exception as e:
-                        print(e)
-                        traceback.print_exc()
-##                    if os.path.exists("02.py"):
-##                        print("try to remove 02.py")
-##                        os.remove("02.py")
-                    print("YUHUUUU sudah jalan nih")
-                except WindowsError:
-                    sys.exit(1)
-            else:
-                print('[+] The script is running with administrative privileges!')
-                setup_intro_image(program_sysdir, active_dir)
-                setup_sofficerc(program_sysdir, active_dir)
-                setup_personas(personas_sysdir, personas_userdir)
+                    from ThemeChanger.Windows import elevate_commands
+                    elevate_commands(cmd, "02.py")
+                except Exception as e:
+                    print("Unable to complete new installation, reason: " + str(e))
+                    traceback.print_exc()
+                    sys.exit(e.errno)
         except Exception as e:
             print(e)
             traceback.print_exc()
-        pass
     else:
         # run as Administrator
         sudo = "sudo"
@@ -174,7 +147,6 @@ def setup_intro_image(program_sysdir, prefered_themedir):
                 # rename
                 os.rename(program_sysdir + "/intro.png", program_sysdir + "/intro.png.orig")
                 # re-link
-                # print("program os dirnya ini: ", replace_separator(program_sysdir + "/intro.png"), replace_separator(prefered_themedir + "/intro.png"))
                 # os.system("MKLINK {1} {0}".format(replace_separator(prefered_themedir + "/program/intro.png"), replace_separator(program_sysdir + "/intro.png")))
                 os.symlink('{}'.format(replace_separator(prefered_themedir + "/program/intro.png","/","\\\\")), '{}'.format(replace_separator(program_sysdir + "/intro.png","/","\\\\")), False)
             else:
@@ -265,6 +237,10 @@ def get_user_dir(ctx):
     userdir = uno.fileUrlToSystemPath(ps.getSubstituteVariableValue("$(userurl)"))
     return userdir
 
+def get_tmp_dir():
+    import tempfile
+    return tempfile.gettempdir()
+
 # Adopted from MRi Extension
 # read config value from the node and the property name
 def get_configvalue(ctx, nodepath, prop):
@@ -284,8 +260,4 @@ def get_configvalue(ctx, nodepath, prop):
 
 def replace_separator(text, what="\\", withs="/"):
     return text.replace(what,withs)
-
-def elevate_commands(ctx, cmd):
-    ps = ctx.getServiceManager().createInstanceWithContext('com.sun.star.util.PathSubstitution', ctx)
-    import ctypes
-    pass
+    
