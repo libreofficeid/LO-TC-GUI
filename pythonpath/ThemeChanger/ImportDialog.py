@@ -51,7 +51,11 @@ class ImportDialog(ImportDialog_UI):
             filepicker.setTitle("Select lotc file")
             if filepicker.execute():
                 print(filepicker.getFiles())
-                self.DialogContainer.getControl("LotcLocation").Text = filepicker.getFiles()[0][7:]
+                import sys
+                if sys.platform.startswith("win"):
+                    self.DialogContainer.getControl("LotcLocation").Text = filepicker.getFiles()[0][8:]
+                else:
+                    self.DialogContainer.getControl("LotcLocation").Text = filepicker.getFiles()[0][7:]
         except Exception as e:
             import traceback
             traceback.print_exc()
