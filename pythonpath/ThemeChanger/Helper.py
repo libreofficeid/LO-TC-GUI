@@ -210,10 +210,9 @@ def parse_manifest(manifest_dir):
         author = root.find("author").text
         author_link = root.find("author_url").text
         if sys.platform.startswith("win"):
-            screenshots = ["file://{}\\{}".format(replace_separator(manifest_dir).replace("/","\\"), replace_separator(ss.text,"/","\\")) for ss in root.findall("assets/img")]
+            screenshots = ["file:///{}\\{}".format(replace_separator(manifest_dir,"/","\\"), replace_separator(ss.text,"/","\\")) for ss in root.findall("assets/img")]
         else:
             screenshots = ["file://{}/{}".format(manifest_dir, ss.text) for ss in root.findall("assets/img")]
-        print(screenshots)
         source_link = [{"text": sl.text, "url": sl.attrib["src"]} for sl in root.findall("source_link/link")]
         # persona_path = root.find("assets/persona_list").text
         data = {
