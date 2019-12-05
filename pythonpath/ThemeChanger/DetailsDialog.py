@@ -6,7 +6,11 @@ from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK, BUTTONS_OK_CANCEL, BU
 from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_OK, DEFAULT_BUTTON_CANCEL, DEFAULT_BUTTON_RETRY, DEFAULT_BUTTON_YES, DEFAULT_BUTTON_NO, DEFAULT_BUTTON_IGNORE
 from com.sun.star.awt.MessageBoxType import MESSAGEBOX, INFOBOX, WARNINGBOX, ERRORBOX, QUERYBOX
 from ThemeChanger.UI.DetailsDialog_UI import DetailsDialog_UI
-from ThemeChanger.Helper import get_user_dir, get_configvalue
+from ThemeChanger.Helper import get_user_dir, get_configvalue, replace_separator
+import traceback
+import sys
+if sys.platform.startswith("win"):
+    from ThemeChanger.Windows import elevate_commands
 
 # -------------------------------------
 # HELPERS FOR MRI AND  XRAY
@@ -69,8 +73,19 @@ class DetailsDialog(DetailsDialog_UI):
                 self.messageBox("Your theme will be deactivated", "Deactivate", INFOBOX)
                 active_theme = get_user_dir(self.ctx) + "/lotc-themes/active-theme"
                 default_theme_path = get_user_dir(self.ctx) + "/lotc-themes/default-libreoffice"
-                os.remove(active_theme)
-                os.symlink(default_theme_path, active_theme)
+                os.remove(replace_separator(active_theme))
+                if sys.platform.startswith("win"):
+                    cmd = "import os; os.symlink('{0}','{1}',True)".format(
+                        replace_separator(replace_separator(default_theme_path),"/","\\\\"),
+                        replace_separator(replace_separator(active_theme),"/","\\\\"))
+                    try:
+                        elevate_commands(cmd,"relinkdefaulttheme.py")
+                    except Exception as e:
+                        self.messageBox("Unable to complete re-link active-theme, reason: "+str(e), "Error Linking to Default Theme", ERRORBOX)
+                        traceback.print_exc()
+                        sys.exit(1)
+                else:
+                    os.symlink(default_theme_path, active_theme)
                 self.update_registry(None)
                 self.messageBox("Theme deactivation success!\nRelaunch LibreOffice to apply changes", "Deactivate", INFOBOX)
                 self.DialogContainer.getControl("RemoveButton").setLabel("Remove")
@@ -80,7 +95,6 @@ class DetailsDialog(DetailsDialog_UI):
                 # os.system("killall soffice.bin")
             except Exception as e:
                 print(e)
-                import traceback
                 traceback.print_exc()
         # prompt it will be removed permanently
         elif self.DialogModel.getByName("RemoveButton").Label == "Remove":
@@ -102,27 +116,38 @@ class DetailsDialog(DetailsDialog_UI):
                     with open(personas_userdir + "/personas_list.txt", "r") as fin:
                         current_personas_data = fin.read().splitlines(True)
                     with open(personas_userdir + "/personas_list.txt", "w") as fout:
-                        fout.writelines(current_personas_data[1:])
+                        fout.writelines(current_personas_data[1:]+"\n")
                     self.update_registry(None)
                     self.messageBox("Success removing theme", "Remove Theme", INFOBOX)
                     self.DialogContainer.getControl("RemoveButton").setEnable(False)
                     self.DialogContainer.getControl("InstallButton").setEnable(False)
                 except Exception as e:
-                    import traceback
                     print(e)
                     traceback.print_exc()
 
     def InstallButton_OnClick(self):
         try:
             import os
+            import sys
             personas_userdir = get_user_dir(self.ctx) + "/gallery/personas"
             theme_location = self.theme_data["theme_location"]
             active_theme = get_user_dir(self.ctx) + "/lotc-themes/active-theme"
             # print(os.path.basename(theme_location))
             # re-link active-theme
             if theme_location != os.readlink(active_theme):
-                os.remove(active_theme)
-                os.symlink(theme_location, active_theme)
+                os.remove(replace_separator(active_theme))
+                if sys.platform.startswith("win"):
+                    cmd = "import os; os.symlink('{0}','{1}',True)".format(
+                        replace_separator(replace_separator(theme_location),"/","\\\\"),
+                        replace_separator(replace_separator(active_theme),"/","\\\\"))
+                    try:
+                        elevate_commands(cmd,"relinktheme.py")
+                    except Exception as e:
+                        print("Unable to complete re-link active-theme, reason: "+str(e))
+                        traceback.print_exc()
+                        os.rename(replace_separator(active_theme+".orig"),replace_separator(active_theme))
+                else:
+                    os.symlink(theme_location, active_theme)
             # copy personas to user gallery
             current_personas_data = None
             if not self.theme_data["name"] == "Default LibreOffice":
@@ -140,7 +165,7 @@ class DetailsDialog(DetailsDialog_UI):
                     current_content = file.read()
                     file.seek(0,0)
                     if current_personas_data not in current_content:
-                        file.write(current_personas_data + current_content)
+                        file.write(current_personas_data + current_content + "\n")
             # update the registry
             self.update_registry(current_personas_data)
             self.current_active_theme = self.theme_data["name"]
@@ -148,10 +173,8 @@ class DetailsDialog(DetailsDialog_UI):
             self.DialogContainer.getControl("RemoveButton").setLabel("Deactivate")
             self.DialogContainer.getControl("InstallButton").setEnable(False)
             self.DialogContainer.getControl("InstallButton").setLabel("Activated")
-            # os.system("killall soffice.bin")
         except Exception as e:
             print(e)
-            import traceback
             traceback.print_exc()
 
     def update_registry(self, personas_data):
@@ -168,7 +191,6 @@ class DetailsDialog(DetailsDialog_UI):
 
         except Exception as e:
             print(e)
-            import traceback
             traceback.print_exc()
             exit(-1)
 

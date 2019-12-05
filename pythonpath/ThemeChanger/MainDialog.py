@@ -14,6 +14,7 @@ import ThemeChanger.Helper as Helper
 from os import listdir, makedirs, readlink
 from os.path import exists, isfile, abspath, dirname, relpath
 from shutil import copytree as copy_to_userdir, rmtree
+import sys
 import tempfile
 import traceback
 import zipfile
@@ -116,14 +117,21 @@ class MainDialog(MainDialog_UI):
     def create_new_component(self, theme, active_theme):
         thumbnail_active_full_path = dirname(abspath(__file__)) + "/UI/icons/active.svg"
         thumbnail_inactive_full_path = dirname(abspath(__file__)) + "/UI/icons/nonactive.png"
+        print("gambar thumbnail active ndaknya: ", thumbnail_active_full_path, thumbnail_inactive_full_path)
         is_active = False
         if theme["name"].lower() == active_theme.lower():
             is_active = True
         print("registering '%s' to dialog" % theme["name"])
         if is_active:
-            self.themeListBox.insertItem(0, theme["name"], "file://"+thumbnail_active_full_path)
+            if sys.platform.startswith("win"):
+                self.themeListBox.insertItem(0, theme["name"], "file:///"+thumbnail_active_full_path)
+            else:
+                self.themeListBox.insertItem(0, theme["name"], "file://"+thumbnail_active_full_path)
         else:
-            self.themeListBox.insertItem(0, theme["name"], "file://"+thumbnail_inactive_full_path)
+            if sys.platform.startswith("win"):
+                self.themeListBox.insertItem(0, theme["name"], "file:///"+thumbnail_inactive_full_path)
+            else:
+                self.themeListBox.insertItem(0, theme["name"], "file://"+thumbnail_inactive_full_path)
 
     def refresh_installed_themes(self, userdir):
         installed_path = listdir(userdir + "/lotc-themes")
@@ -200,6 +208,8 @@ class MainDialog(MainDialog_UI):
                     "name": theme_name,
                     "screenshots": ["file://{}/program/intro.png".format(theme_dir)]
                 }
+                if sys.platform.startswith("win"):
+                    theme_data["screenshots"] = ["file:///{}/program/intro.png".format(Helper.replace_separator(theme_dir))]
             theme_data["theme_location"] = theme_dir
             theme_data["current_active"] = self.active_theme
             detailDialog = DetailsDialog(ctx=self.ctx, theme_data=theme_data)
@@ -220,4 +230,8 @@ class MainDialog(MainDialog_UI):
 
     def themeListBox_OnClick(self):
         print("Theme selected: ", self.DialogContainer.getControl("themeListBox").getSelectedItem())
-        self.showDetailDialog(self.DialogContainer.getControl("themeListBox").getSelectedItem())
+        try:
+            self.showDetailDialog(self.DialogContainer.getControl("themeListBox").getSelectedItem())
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
