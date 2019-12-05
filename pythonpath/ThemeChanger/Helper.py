@@ -9,6 +9,7 @@ import traceback
 # Setup intro
 def prepare_new_install(ctx):
     theme_name = "default-libreoffice"
+    OK = True
     # get program install dir
     ps = ctx.getServiceManager().createInstanceWithContext('com.sun.star.util.PathSubstitution', ctx)
     instdir = uno.fileUrlToSystemPath(ps.getSubstituteVariableValue("$(instpath)"))
@@ -65,12 +66,14 @@ def prepare_new_install(ctx):
                     from ThemeChanger.Windows import elevate_commands
                     elevate_commands(cmd, "01.py")
                 except Exception as e:
+                    OK = False
                     print("Unable to complete new link active-theme, reason: " + str(e))
                     traceback.print_exc()
                     sys.exit(e.errno)
         else:
             os.symlink(prefered_themedir, lotcdir + "/active-theme")
     except Exception as e:
+        OK = False
         print("Error on preparing active theme symlink")
         print(e)
         traceback.print_exc()
@@ -97,10 +100,12 @@ def prepare_new_install(ctx):
                     from ThemeChanger.Windows import elevate_commands
                     elevate_commands(cmd, "02.py")
                 except Exception as e:
+                    OK = False
                     print("Unable to complete new installation, reason: " + str(e))
                     traceback.print_exc()
                     sys.exit(e.errno)
         except Exception as e:
+            OK = False
             print(e)
             traceback.print_exc()
     else:
@@ -112,6 +117,7 @@ def prepare_new_install(ctx):
                 setup_sofficerc(program_sysdir, active_dir)
                 setup_personas(personas_sysdir, personas_userdir)
             except Exception as e:
+                OK = False
                 print(e)
                 traceback.print_exc()
 
@@ -134,9 +140,9 @@ def prepare_new_install(ctx):
                             break
                 subprocess.call([sudo, sys.executable, "-c", RUN_ME.format(current_dir, program_sysdir, active_dir, personas_sysdir, personas_userdir)])
     # write config that preparation completed
-    with open(userdir + "/lotc-prepare", "w") as f:
-        f.write("finished")
-        f.close()
+    if OK:
+        with open(userdir + "/lotc-prepare", "w") as f:
+            f.write("finished")
     return
 
 def setup_intro_image(program_sysdir, prefered_themedir):
