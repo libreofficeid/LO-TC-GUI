@@ -15,6 +15,7 @@ zip:
 		META-INF/manifest.xml \
 		Addons.xcu \
 		themechanger.py \
+		lotc-modify-snap.sh \
 		pythonpath/* \
 		registration/* \
 		description/*
