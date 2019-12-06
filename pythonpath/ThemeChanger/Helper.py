@@ -32,10 +32,12 @@ def prepare_new_install(ctx):
     prefered_themedir = "%s/%s" % (lotcdir, theme_name)
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
-
+    
+    # when lotc-prepare is exists, it should not continue preparation setup in instdir
     if os.path.exists(userdir + "/lotc-prepare"):
+        #TODO check version libreoffice inside lotc-prepare content
         return
-
+         
     if not os.path.exists(personas_userdir):
         copytree(personas_sysdir, personas_userdir)
 
@@ -130,7 +132,20 @@ def prepare_new_install(ctx):
                 setup_intro_image(progdir_flatpak, active_dir)
                 setup_sofficerc(progdir_flatpak, active_dir)
                 setup_personas(personasdir_flatpak, personas_userdir)
+            elif os.environ.get("SNAP"):
+                # snap
+                # in snap install, you have to run lo_modify_snap.sh in your HOMEDIR via terminal
+                copyfile(current_dir+"/../../lotc-modify-snap.sh", os.getenv("HOME")+"/lotc-modify-snap.sh")
+                # preparing lo_modify_snap.sh content
+                os.system("sed -i 's|REPLACEMOUNTPOINT|{}|' {}".format(os.getenv("SNAP"), os.getenv("HOME")+"/lotc-modify-snap.sh"))
+                os.system("sed -i 's|REPLACEREV|{}|' {}".format(os.getenv("SNAP_REVISION"), os.getenv("HOME")+"/lotc-modify-snap.sh"))
+                os.system("sed -i 's|REPLACEUSERDIR|{}|' {}".format(userdir, os.getenv("HOME")+"/lotc-modify-snap.sh"))
+                os.system("sed -i 's|REPLACEINTRO|{}|' {}".format(active_dir + "/program/intro.png", os.getenv("HOME")+"/lotc-modify-snap.sh"))
+                os.system("sed -i 's|REPLACESOFFICERC|{}|' {}".format(active_dir + "/program/sofficerc", os.getenv("HOME")+"/lotc-modify-snap.sh"))
+                os.system("sed -i 's|REPLACEPERSONAS|{}|' {}".format(personas_userdir, os.getenv("HOME")+"/lotc-modify-snap.sh"))
+                return "SNAP"
             else:
+                # normal linux installation
                 if os.environ.get("DISPLAY"):
                     prompts = ["pkexec","gksudo", "kdesudo"]
                     for item in prompts:
@@ -142,8 +157,9 @@ def prepare_new_install(ctx):
     # write config that preparation completed
     if OK:
         with open(userdir + "/lotc-prepare", "w") as f:
+            #TODO write libreoffice installed version
             f.write("finished")
-    return
+    return "OK"
 
 def setup_intro_image(program_sysdir, prefered_themedir):
     # backup intro.png

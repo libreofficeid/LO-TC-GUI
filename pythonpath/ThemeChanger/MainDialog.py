@@ -11,7 +11,7 @@ from ThemeChanger.CreateDialog import CreateDialog
 from ThemeChanger.DetailsDialog import DetailsDialog
 import ThemeChanger.Helper as Helper
 
-from os import listdir, makedirs, readlink
+from os import listdir, makedirs, readlink, getenv
 from os.path import exists, isfile, abspath, dirname, relpath
 from shutil import copytree as copy_to_userdir, rmtree
 import sys
@@ -166,7 +166,9 @@ class MainDialog(MainDialog_UI):
     def showDialog(self):
         self.DialogContainer.setVisible(True)
         self.DialogContainer.createPeer(self.Toolkit, None)
-        Helper.prepare_new_install(self.ctx)
+        res = Helper.prepare_new_install(self.ctx)
+        if str(res) == "SNAP":
+            self.messageBox("You're running from snap.\nPreparation for snap is required.\n Close your LibreOffice and run {}/lotc-modify-snap.sh via terminal.".format(getenv("HOME")), "Snap preparation required", MsgType=INFOBOX)
         # get os env
         self.register_new_item(self.ctx)
         self.DialogContainer.execute()
