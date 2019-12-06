@@ -117,7 +117,6 @@ class MainDialog(MainDialog_UI):
     def create_new_component(self, theme, active_theme):
         thumbnail_active_full_path = dirname(abspath(__file__)) + "/UI/icons/active.svg"
         thumbnail_inactive_full_path = dirname(abspath(__file__)) + "/UI/icons/nonactive.png"
-        print("gambar thumbnail active ndaknya: ", thumbnail_active_full_path, thumbnail_inactive_full_path)
         is_active = False
         if theme["name"].lower() == active_theme.lower():
             is_active = True
