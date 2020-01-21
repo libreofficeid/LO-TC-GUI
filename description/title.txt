@@ -1,1 +1,1 @@
-LibreOfficeThemeChanger v 0.3.3
+LibreOfficeThemeChanger v 0.3.5
