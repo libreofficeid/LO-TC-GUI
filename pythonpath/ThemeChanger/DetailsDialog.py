@@ -110,13 +110,13 @@ class DetailsDialog(DetailsDialog_UI):
                     if os.path.exists(theme_location):
                         shutil.rmtree(theme_location)
                     # remove personas dir
-                    if os.path.exists(personas_userdir + "/" + os.path.basename(theme_location)):
-                        shutil.rmtree(personas_userdir + "/" + os.path.basename(theme_location))
+                    if os.path.exists(personas_userdir + "/" + os.path.basename(theme_location).title().replace("-","")):
+                        shutil.rmtree(personas_userdir + "/" + os.path.basename(theme_location).title().replace("-",""))
                     # update personas file
                     with open(personas_userdir + "/personas_list.txt", "r") as fin:
                         current_personas_data = fin.read().splitlines(True)
                     with open(personas_userdir + "/personas_list.txt", "w") as fout:
-                        fout.writelines(current_personas_data[1:]+"\n")
+                        fout.writelines(current_personas_data[1:])
                     self.update_registry(None)
                     self.messageBox("Success removing theme", "Remove Theme", INFOBOX)
                     self.DialogContainer.getControl("RemoveButton").setEnable(False)
@@ -165,7 +165,7 @@ class DetailsDialog(DetailsDialog_UI):
                     current_content = file.read()
                     file.seek(0,0)
                     if current_personas_data not in current_content:
-                        file.write(current_personas_data + current_content + "\n")
+                        file.write(current_personas_data +"\n"+ current_content)
             # update the registry
             self.update_registry(current_personas_data)
             self.current_active_theme = self.theme_data["name"]
