@@ -73,6 +73,16 @@ class DetailsDialog(DetailsDialog_UI):
                 self.messageBox("Your theme will be deactivated", "Deactivate", INFOBOX)
                 active_theme = get_user_dir(self.ctx) + "/lotc-themes/active-theme"
                 default_theme_path = get_user_dir(self.ctx) + "/lotc-themes/default-libreoffice"
+                # get user configdir
+                config_dir = get_user_dir(self.ctx) + "/config"
+                # looking for original config folder in $(userdir)
+                if os.path.exists(config_dir + ".orig"):
+                    import shutil
+                    # remove current config dir
+                    shutil.rmtree(config_dir)
+                    # revert back to original libreoffice config
+                    shutil.move(config_dir + ".orig",config_dir)
+                # remove current active symlink
                 os.remove(replace_separator(active_theme))
                 if sys.platform.startswith("win"):
                     cmd = "import os; os.symlink('{0}','{1}',True)".format(
@@ -92,7 +102,6 @@ class DetailsDialog(DetailsDialog_UI):
                 self.DialogContainer.getControl("InstallButton").setEnable(True)
                 self.DialogContainer.getControl("InstallButton").setLabel("Activate")
                 self.current_active_theme = "default-libreoffice"
-                # os.system("killall soffice.bin")
             except Exception as e:
                 print(e)
                 traceback.print_exc()
@@ -150,14 +159,31 @@ class DetailsDialog(DetailsDialog_UI):
                     os.symlink(theme_location, active_theme)
             # copy personas to user gallery
             current_personas_data = None
+            import shutil
             if not self.theme_data["name"] == "Default LibreOffice":
                 for item in os.listdir(active_theme + "/personas/"):
                     if os.path.isdir(active_theme + "/personas/" + item):
                         personas = item
                 if not os.path.exists(personas_userdir + "/" + personas):
-                    import shutil
                     # copy dir
                     shutil.copytree(active_theme + "/personas/" + personas, personas_userdir + "/" + personas)
+                # copy custom toolbar owned by lotc theme to userconfigdir
+                config_dir = get_user_dir(self.ctx) + "/config"
+                if os.path.exists(active_theme + "/config"):
+                    # backup original config folder in $(userdir), if we already have it, skip
+                    if not os.path.exists(config_dir+".orig"):
+                        shutil.copytree(config_dir,config_dir+".orig")
+                    # remove configdir first (due to python < 3.8)
+                    shutil.rmtree(config_dir)
+                    # then copy config dir owned by lotc theme to $(userdir)
+                    shutil.copytree(active_theme + "/config", config_dir)
+                else:
+                    # looking for original config folder in $(userdir)
+                    if os.path.exists(config_dir + ".orig"):
+                        # remove current config dir
+                        shutil.rmtree(config_dir)
+                        # revert back to original libreoffice config
+                        shutil.move(config_dir + ".orig", config_dir)
                 # append personas data to top of system personas_list.txt
                 with open(active_theme + "/personas/personas_list.txt") as file:
                     current_personas_data = file.read()
@@ -188,7 +214,15 @@ class DetailsDialog(DetailsDialog_UI):
                 persona = "default"
                 persona_settings = personas_data.strip()
             self.write_config(persona,persona_settings)
-
+            # write custom xcu data if exists
+            if len(self.theme_data["custom_xcu"]) > 0:
+                for item in self.theme_data["custom_xcu"]:
+                    item_path = item["path"]
+                    property_name = item["property_name"]
+                    property_value = item["property_value"]
+                    if personas_data == None:
+                        property_value = ""
+                    self.write_custom_xcu(item_path, property_name, property_value)
         except Exception as e:
             print(e)
             traceback.print_exc()
@@ -204,10 +238,44 @@ class DetailsDialog(DetailsDialog_UI):
         try:
             config_writer = config_provider.createInstanceWithArguments(
                 'com.sun.star.configuration.ConfigurationUpdateAccess', (node,))
-            cfg_names = ("Persona", "PersonaSettings")
-            cfg_values = (persona_data, personasettings_data)
+            cfg_names = ("Persona", "PersonaSettings","SymbolStyle")
+            cfg_values = (persona_data, personasettings_data, self.theme_data["icon_theme"])
             config_writer.setPropertyValues(cfg_names, cfg_values)
 
             config_writer.commitChanges()
         except:
             raise
+
+    def write_custom_xcu(self, item_path, property_name, property_value):
+        if property_value == "true":
+            property_value = True
+        elif property_value == "false":
+            property_value = False
+        else:
+            try:
+                property_value = int(property_value)
+            except ValueError:
+                # print("[!] Property is not a valid integer, falling back to string")
+                property_value = property_value
+        # print("---------------BEGIN-----------------")
+        # print(item_path," ->> ",type(item_path))
+        # print(property_name," ->> ",type(property_name))
+        # print(property_value," ->> ",type(property_value))
+        # print("----------------END----------------")
+        from com.sun.star.beans import PropertyValue
+        config_provider = self.ctx.getServiceManager().createInstanceWithContext(
+            'com.sun.star.configuration.ConfigurationProvider', self.ctx)
+        node = PropertyValue()
+        node.Name = 'nodepath'
+        node.Value = item_path
+        try:
+            config_writer = config_provider.createInstanceWithArguments(
+                'com.sun.star.configuration.ConfigurationUpdateAccess', (node,))
+            cfg_names = (property_name, property_name)
+            cfg_values = (property_value, property_value)
+            config_writer.setPropertyValues(cfg_names, cfg_values)
+
+            config_writer.commitChanges()
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
