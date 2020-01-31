@@ -1,0 +1,1 @@
+SrikandiTheme;SrikandiTheme;SrikandiTheme/preview.png;SrikandiTheme/header.png;SrikandiTheme/footer.png;#ffffff;#000000

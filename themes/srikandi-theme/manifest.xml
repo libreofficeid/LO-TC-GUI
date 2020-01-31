@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<lotc>
+  <theme_name>Srikandi</theme_name>
+  <version>1.0</version>
+  <author>Rania Amina</author>
+  <author_url>https://raniaamina.id</author_url>
+  <description>Srikandi is LibreOffice theme with ladies colors. For best result, please make sure you've installed Srikandi icon theme first on your LibreOffice</description>
+  <icon_theme>Srikandi</icon_theme>
+  <assets id="personas">
+    <persona_list>personas/personas_list.txt</persona_list>
+    <footer_img>personas/SrikandiTheme/footer.png</footer_img>
+    <header_img>personas/SrikandiTheme/header.png</header_img>
+    <preview>personas/SrikandiTheme/preview.png</preview>
+  </assets>
+  <assets id="program">
+    <intro>program/intro.png</intro>
+    <soffice>program/sofficerc</soffice>
+  </assets>
+  <assets id="screenshots">
+    <img id="screenshot-1">screenshots/screenshot-1.png</img>
+    <img id="screenshot-2">screenshots/screenshot-2.png</img>
+  </assets>
+  <source_link>
+    <link id="1" src="https://libreoffice.id">About Srikandi Theme</link>
+    <link id="2" src="https://instagram.com/libreofficeid">LibreOffice</link>
+  </source_link>
+</lotc>
