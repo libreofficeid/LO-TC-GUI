@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<lotc>
+  <theme_name>Kids Theme</theme_name>
+  <version>1.0</version>
+  <author>Rania Amina</author>
+  <author_url>https://raniaamina.id</author_url>
+  <description>LibreOffice for Kids, is simplified theme for LibreOffice. For best result please install LibreOffice Kids icon theme first before activating this theme.</description>
+  <icon_theme>Kids</icon_theme>
+  <assets id="personas">
+    <persona_list>personas/personas_list.txt</persona_list>
+    <footer_img>personas/KidsTheme/footer.png</footer_img>
+    <header_img>personas/KidsTheme/header.png</header_img>
+    <preview>personas/KidsTheme/preview.png</preview>
+  </assets>
+  <assets id="program">
+    <intro>program/intro.png</intro>
+    <soffice>program/sofficerc</soffice>
+  </assets>
+  <assets id="screenshots">
+    <img id="screenshot-1">screenshots/screenshot-1.png</img>
+    <img id="screenshot-2">screenshots/screenshot-2.png</img>
+  </assets>
+  <source_link>
+    <link id="1" src="https://source-link-1">Kids Icon Theme</link>
+    <link id="2" src="#"> </link>
+  </source_link>
+  <custom_xcu>
+    <oor:items xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <item oor:path="/org.openoffice.Office.UI.WriterWindowState/UIElements/States/org.openoffice.Office.UI.WindowState:WindowStateType['private:resource/toolbar/standardbar']"><prop oor:name="Locked" oor:op="fuse"><value>true</value></prop></item>
+        <item oor:path="/org.openoffice.Office.UI.WriterWindowState/UIElements/States/org.openoffice.Office.UI.WindowState:WindowStateType['private:resource/toolbar/textobjectbar']"><prop oor:name="DockPos" oor:op="fuse"><value>0,21</value></prop></item>
+        <item oor:path="/org.openoffice.Office.UI.WriterWindowState/UIElements/States/org.openoffice.Office.UI.WindowState:WindowStateType['private:resource/toolbar/textobjectbar']"><prop oor:name="DockingArea" oor:op="fuse"><value>2</value></prop></item>
+        <item oor:path="/org.openoffice.Office.UI.WriterWindowState/UIElements/States/org.openoffice.Office.UI.WindowState:WindowStateType['private:resource/toolbar/textobjectbar']"><prop oor:name="Locked" oor:op="fuse"><value>true</value></prop></item>
+        <item oor:path="/org.openoffice.Office.UI.WriterWindowState/UIElements/States/org.openoffice.Office.UI.WindowState:WindowStateType['private:resource/toolbar/textobjectbar']"><prop oor:name="Size" oor:op="fuse"><value>1196,39</value></prop></item>
+    </oor:items>
+  </custom_xcu>
+</lotc>

@@ -1,0 +1,1 @@
+KidsTheme;KidsTheme;KidsTheme/preview.png;KidsTheme/header.png;KidsTheme/footer.png;#ffffff;#000000

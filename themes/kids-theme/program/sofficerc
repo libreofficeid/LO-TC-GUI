@@ -1,0 +1,17 @@
+[Bootstrap]
+CrashDirectory=${$BRAND_BASE_DIR/program/bootstraprc:UserInstallation}/crash
+HideEula=1
+Logo=1
+NativeProgress=false
+ProgressBarColor=73,184,120
+ProgressFrameColor=72,185,127
+ProgressPosition=937,70
+ProgressSize=153,7
+ProgressTextBaseline=145
+ProgressTextColor=255,255,255
+SecureUserConfig=true
+SecureUserConfigCompress=true
+SecureUserConfigExtensions=true
+SecureUserConfigMode=1
+SecureUserConfigNumCopies=2
+URE_BOOTSTRAP=${ORIGIN}/fundamentalrc
