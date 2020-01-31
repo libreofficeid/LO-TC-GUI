@@ -231,6 +231,24 @@ def parse_manifest(manifest_dir):
         version = root.find("version").text
         author = root.find("author").text
         author_link = root.find("author_url").text
+        if root.find("icon_theme") != None:
+            icon_theme = root.find("icon_theme").text
+        else:
+            icon_theme = "auto"
+        # parsing custom_xcu
+        if root.find("custom_xcu") != None:
+            # get first index of XCU parent (oor:items)
+            xcu_node = root.find("custom_xcu")[0]
+            custom_xcu = []
+            for item in xcu_node:
+                current_item = {"path": item.attrib.get('{http://openoffice.org/2001/registry}path')}
+                property_name = item.find('prop').attrib.get('{http://openoffice.org/2001/registry}name')
+                current_item["property_name"] = property_name
+                property_value = item.find('prop').find('value').text
+                current_item["property_value"] = property_value
+                custom_xcu.append(current_item)
+        else:
+            custom_xcu = []
         if sys.platform.startswith("win"):
             screenshots = ["file:///{}\\{}".format(replace_separator(manifest_dir,"/","\\"), replace_separator(ss.text,"/","\\")) for ss in root.findall("assets/img")]
         else:
@@ -244,13 +262,13 @@ def parse_manifest(manifest_dir):
             "name": theme_name,
             "screenshots": screenshots,
             "version": version,
-            "source_link": source_link
+            "source_link": source_link,
+            "icon_theme": icon_theme,
+            "custom_xcu" : custom_xcu
         }
         # print(data)
         return data
-    except Exception as e:
-        print(e)
-        traceback.print_exc()
+    except FileNotFoundError:
         return None
 
 def get_user_dir(ctx):
@@ -281,4 +299,3 @@ def get_configvalue(ctx, nodepath, prop):
 
 def replace_separator(text, what="\\", withs="/"):
     return text.replace(what,withs)
-    
