@@ -53,6 +53,7 @@ class CreateDialog(CreateDialog_UI):
                 Et.SubElement(root, "author").text = data["author"]
                 Et.SubElement(root, "author_url").text = "https://mywebsite.com"
                 Et.SubElement(root, "description").text = "this is my libreoffice theme description"
+                Et.SubElement(root, "icon_theme").text = "Srikandi"
                 personas = Et.SubElement(root, "assets", {"id": "personas"})
                 Et.SubElement(personas, "persona_list").text = "personas/personas_list.txt"
                 Et.SubElement(personas, "footer_img").text = "personas/{}/footer.png".format(data["name"].title().replace(" ",""))
@@ -66,7 +67,8 @@ class CreateDialog(CreateDialog_UI):
                 Et.SubElement(screenshots, "img", {"id": "screenshot-2"}).text = "screenshots/screenshot-2.png"
                 source_link = Et.SubElement(root, "source_link")
                 Et.SubElement(source_link, "link", {"id": "1", "src": "https://source-link-1"}).text = "About {}".format(data["name"])
-                Et.SubElement(source_link, "link", {"id": "2", "src": "https://source-link-2"}).text = "License"
+                Et.SubElement(source_link, "link", {"id": "2", "src": "https://source-link-2"}).text = "(2/2) Remove this line if not used"
+                Et.SubElement(root, "custom_xcu").text = "Please refer to LOTC Documentation to use custom registrymodifications.xcu. Remove this line if not used"
                 # write to file
                 tree = Et.ElementTree(root)
                 self.indent(root)

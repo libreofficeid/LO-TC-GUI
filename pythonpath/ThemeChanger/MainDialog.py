@@ -207,7 +207,9 @@ class MainDialog(MainDialog_UI):
                     "author": "LibreOffice",
                     "description": "LibreOffice default theme",
                     "name": theme_name,
-                    "screenshots": ["file://{}/program/intro.png".format(theme_dir)]
+                    "icon_theme": "auto",
+                    "screenshots": ["file://{}/program/intro.png".format(theme_dir)],
+                    "custom_xcu" : []
                 }
                 if sys.platform.startswith("win"):
                     theme_data["screenshots"] = ["file:///{}/program/intro.png".format(Helper.replace_separator(theme_dir))]
