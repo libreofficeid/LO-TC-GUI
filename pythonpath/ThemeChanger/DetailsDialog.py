@@ -247,7 +247,9 @@ class DetailsDialog(DetailsDialog_UI):
             raise
 
     def write_custom_xcu(self, item_path, property_name, property_value):
-        if property_value == "true":
+        if property_value == "":
+            property_value = None
+        elif property_value == "true":
             property_value = True
         elif property_value == "false":
             property_value = False
@@ -271,8 +273,8 @@ class DetailsDialog(DetailsDialog_UI):
         try:
             config_writer = config_provider.createInstanceWithArguments(
                 'com.sun.star.configuration.ConfigurationUpdateAccess', (node,))
-            cfg_names = (property_name, property_name)
-            cfg_values = (property_value, property_value)
+            cfg_names = (property_name, )
+            cfg_values = (property_value, )
             config_writer.setPropertyValues(cfg_names, cfg_values)
 
             config_writer.commitChanges()
