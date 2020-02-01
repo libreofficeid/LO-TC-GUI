@@ -24,4 +24,13 @@ Splash of this theme created by Fauzan a.k.a @ozantliuky. The license of splash 
     <link id="1" src="https://addons.mozilla.org/id/firefox/addon/libreoffice-4-ubuntu-ambian/">About Ambiance</link>
     <link id="2" src="#"> </link>
   </source_link>
+    <custom_xcu>
+  <oor:items xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <item oor:path="/org.openoffice.Office.UI.WriterWindowState/UIElements/States/org.openoffice.Office.UI.WindowState:WindowStateType['private:resource/toolbar/standardbar']"><prop oor:name="Locked" oor:op="fuse"><value>false</value></prop></item>
+  <item oor:path="/org.openoffice.Office.UI.WriterWindowState/UIElements/States/org.openoffice.Office.UI.WindowState:WindowStateType['private:resource/toolbar/textobjectbar']"><prop oor:name="DockPos" oor:op="fuse"><value>0,0</value></prop></item>
+  <item oor:path="/org.openoffice.Office.UI.WriterWindowState/UIElements/States/org.openoffice.Office.UI.WindowState:WindowStateType['private:resource/toolbar/textobjectbar']"><prop oor:name="DockingArea" oor:op="fuse"><value>0</value></prop></item>
+  <item oor:path="/org.openoffice.Office.UI.WriterWindowState/UIElements/States/org.openoffice.Office.UI.WindowState:WindowStateType['private:resource/toolbar/textobjectbar']"><prop oor:name="Locked" oor:op="fuse"><value>false</value></prop></item>
+  <item oor:path="/org.openoffice.Office.UI.WriterWindowState/UIElements/States/org.openoffice.Office.UI.WindowState:WindowStateType['private:resource/toolbar/textobjectbar']"><prop oor:name="Size" oor:op="fuse"><value>0,0</value></prop></item>
+</oor:items>
+  </custom_xcu>
 </lotc>
